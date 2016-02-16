@@ -435,6 +435,8 @@ class CI_API AppBase {
 	//! Returns a pointer to the active App
 	static AppBase*			get();
 
+	const std::string&		getName() const { return mName; }
+
   protected:
 	AppBase();
 
@@ -450,6 +452,9 @@ class CI_API AppBase {
 	//! \endcond
 
   private:
+
+	//! Set from window title from app instantiation. Immutable.
+	std::string				mName;
 
 	Timer					mTimer;
 	uint32_t				mFrameCount;
