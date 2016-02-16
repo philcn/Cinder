@@ -8,3 +8,7 @@
 	path = include/boost
 	url = git://github.com/cinder/Cinder-Boost.git
 	branch = boost_1_60
+	branch = boost_1_58
+[submodule "tools/vulkan"]
+	path = tools/vulkan
+	url = git://github.com/cinder/Cinder-Vulkan-Tools.git
