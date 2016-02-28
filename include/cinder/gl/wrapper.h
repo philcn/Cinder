@@ -380,4 +380,3 @@ class CI_API ExceptionUnknownTarget : public Exception {
 };
 
 } } // namespace cinder::gl
-

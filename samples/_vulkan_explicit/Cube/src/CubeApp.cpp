@@ -157,11 +157,9 @@ void RotatingCubeApp::setup()
 	mPresenter = vk::context()->getPresenter();
 
 	mFrameQueue.reset( new ConcurrentCircularBuffer<uint32_t>( FRAME_LAG ) );
-	mRenderThreadContext = vk::Environment::getEnv()->createContextFromExisting( vk::context(), 1 );
-	mRenderThreadRunning = true;
-	mRenderThread.reset( new std::thread( &RotatingCubeApp::renderThreadFunc, this, mRenderThreadContext ) );
-
-	mCommandBufferQueue.reset( new ConcurrentCircularBuffer<uint32_t>( FRAME_LAG ) );
+	mWorkThreadContext = vk::Context::createFromExisting( vk::context(), { { VK_QUEUE_GRAPHICS_BIT, 1 } } );
+	mWorkThreadRunning = true;
+	mWorkThread.reset( new std::thread( &RotatingCubeApp::workThreadFunc, this, mWorkThreadContext ) );
 }
 
 void RotatingCubeApp::cleanup()
@@ -187,14 +185,14 @@ void RotatingCubeApp::generateCommandBuffer( const vk::CommandBufferRef& cmdBuf,
 
 	cmdBuf->begin();
 	{
-		mPresenter->beginRender( cmdBuf, ctx );
+		ctx->getPresenter()->beginRender( cmdBuf, ctx );
 		{
 			vk::setMatrices( mCam );
 			vk::ScopedModelMatrix modelScope;
 			vk::multModelMatrix( mCubeRotation );
 			mBatch[frameIdx]->draw();
 		}
-		mPresenter->endRender();
+		ctx->getPresenter()->endRender( ctx );
 	}
 	cmdBuf->end();
 }
@@ -207,18 +205,7 @@ void RotatingCubeApp::workThreadFunc( const ci::vk::ContextRef& ctx )
 		uint32_t frameIdx = UINT32_MAX;
 		mFrameQueue->tryPopBack( &frameIdx );
 		if( UINT32_MAX != frameIdx ) {
-<<<<<<< HEAD
-			//CI_LOG_I( "Processing frame " << frameIdx );
-
-            // Ensure no more than FRAME_LAG presentations are outstanding. Max wait time is 0.5 seconds
-            VkResult result = vkWaitForFences( ctx->getDevice(), 1, &mFences[frameIdx], VK_TRUE, 5*1e8 );
-			if( ( VK_TIMEOUT == result ) && ( ! mRenderThreadRunning ) ) {
-				break;
-			}
-            vkResetFences( ctx->getDevice(), 1, &mFences[frameIdx] );
-=======
 			//CI_LOG_I( "Processing frame: " << frameIdx );
->>>>>>> Added stubs for Android and Linux, Updated explicit path Cube sample.
 
 			// Update 
 			{
@@ -227,13 +214,6 @@ void RotatingCubeApp::workThreadFunc( const ci::vk::ContextRef& ctx )
 			}
 
 			// Build command buffer
-<<<<<<< HEAD
-			CI_LOG_I( "Generating command buffer for frame " << frameIdx );
-			const auto& cmdBuf = mCommandBuffers[frameIdx];
-			generateCommandBuffer( cmdBuf, frameIdx );
-
-			mCommandBufferQueue->pushFront( frameIdx );
-=======
 			//CI_LOG_I( "Generating command buffer for frame: " << frameIdx );
 			const auto& cmdBuf = mCommandBuffers[frameIdx];
 			generateCommandBuffer( cmdBuf, frameIdx );
@@ -241,7 +221,6 @@ void RotatingCubeApp::workThreadFunc( const ci::vk::ContextRef& ctx )
 			ci::sleep( 14.0f );
 
 			mWorkCondition.notify_one();
->>>>>>> Added stubs for Android and Linux, Updated explicit path Cube sample.
 		}
 	}
 }
@@ -259,24 +238,6 @@ void RotatingCubeApp::draw()
 		vkResetFences(  vk::context()->getDevice(), 1, &mFences[frameIdx] );
 	}
 
-<<<<<<< HEAD
-	// Queue frame for command buffer generation and rendering
-	CI_LOG_I( "Pushing frame: " << frameIdx );
-	mFrameQueue->pushFront( frameIdx );
-
-	frameIdx = UINT32_MAX;
-	mFrameQueue->tryPopBack( &frameIdx );
-	if( UINT32_MAX != frameIdx ) {
-		// Submit rendering work to the graphics queue
-		CI_LOG_I( "Submitting command buffer for frame " << frameIdx );
-		const VkPipelineStageFlags waitDstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-		ctx->getQueue()->submit( mCommandBuffers[frameIdx], mImageAcquiredSemaphore[frameIdx], waitDstStageMask, VK_NULL_HANDLE, mRenderingCompleteSemaphore[frameIdx] );
-
-		// Submit present operation to present queue
-		ctx->getQueue()->present( mRenderingCompleteSemaphore[frameIdx], presenter  );
-		CI_LOG_I( "Queued for presentation: " << frameIdx );
-	};
-=======
 	//CI_LOG_I( "Acquiring frame: " << frameIdx );
 	vk::context()->getPresenter()->acquireNextImage( mFences[frameIdx], mImageAcquiredSemaphore[frameIdx] );
 	mFencesInited[frameIdx] = true;	
@@ -290,12 +251,11 @@ void RotatingCubeApp::draw()
 	// Submit rendering work to the graphics queue
 	//CI_LOG_I( "Submitting command buffer for frame " << frameIdx );
 	const VkPipelineStageFlags waitDstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	vk::context()->getQueue()->submit( mCommandBuffers[frameIdx], mImageAcquiredSemaphore[frameIdx], waitDstStageMask, VK_NULL_HANDLE, mRenderingCompleteSemaphore[frameIdx] );
+	vk::context()->getGraphicsQueue()->submit( mCommandBuffers[frameIdx], mImageAcquiredSemaphore[frameIdx], waitDstStageMask, VK_NULL_HANDLE, mRenderingCompleteSemaphore[frameIdx] );
 
 	// Submit present operation to present queue
-	vk::context()->getQueue()->present( mRenderingCompleteSemaphore[frameIdx], vk::context()->getPresenter() );
+	vk::context()->getGraphicsQueue()->present( mRenderingCompleteSemaphore[frameIdx], vk::context()->getPresenter() );
 	//CI_LOG_I( "Queued for presentation: " << frameIdx );
->>>>>>> Added stubs for Android and Linux, Updated explicit path Cube sample.
 
 	if( 0 == (getElapsedFrames() % 300)) {
 		CI_LOG_I( "FPS: " << getAverageFps() );
