@@ -38,7 +38,12 @@
 typedef struct _GLFWtimePOSIX
 {
     GLFWbool    monotonic;
+<<<<<<< HEAD
     uint64_t    frequency;
+=======
+    double      resolution;
+    uint64_t    base;
+>>>>>>> Started addition of Vulkan support on Linux
 
 } _GLFWtimePOSIX;
 

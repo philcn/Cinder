@@ -85,6 +85,7 @@ static void centerCursor(_GLFWwindow *window)
     _glfwPlatformSetCursorPos(window, width / 2.0, height / 2.0);
 }
 
+<<<<<<< HEAD
 // Returns whether the cursor is in the client area of the specified window
 //
 static GLFWbool cursorInClientArea(_GLFWwindow* window)
@@ -96,30 +97,44 @@ static GLFWbool cursorInClientArea(_GLFWwindow* window)
 // Updates the cursor image according to its cursor mode
 //
 static void updateCursorImage(_GLFWwindow* window)
+=======
+// Transforms the specified y-coordinate between the CG display and NS screen
+// coordinate systems
+//
+static float transformY(float y)
+>>>>>>> Started addition of Vulkan support on Linux
 {
-    if (window->cursorMode == GLFW_CURSOR_NORMAL)
-    {
-        if (window->cursor)
-            [(NSCursor*) window->cursor->ns.object set];
-        else
-            [[NSCursor arrowCursor] set];
-    }
-    else
-        [(NSCursor*) _glfw.ns.cursor set];
+    return CGDisplayBounds(CGMainDisplayID()).size.height - y;
 }
 
 // Transforms the specified y-coordinate between the CG display and NS screen
 // coordinate systems
 //
+<<<<<<< HEAD
 static float transformY(float y)
 {
     return CGDisplayBounds(CGMainDisplayID()).size.height - y;
+=======
+static GLFWbool enterFullscreenMode(_GLFWwindow* window)
+{
+    const GLFWbool status = _glfwSetVideoModeNS(window->monitor, &window->videoMode);
+    const CGRect bounds = CGDisplayBounds(window->monitor->ns.displayID);
+    const NSRect frame = NSMakeRect(bounds.origin.x,
+                                    transformY(bounds.origin.y + bounds.size.height),
+                                    bounds.size.width,
+                                    bounds.size.height);
+
+    [window->ns.object setFrame:frame display:YES];
+    _glfwPlatformFocusWindow(window);
+    return status;
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 // Make the specified window and its video mode active on its monitor
 //
 static GLFWbool acquireMonitor(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     const GLFWbool status = _glfwSetVideoModeNS(window->monitor, &window->videoMode);
     const CGRect bounds = CGDisplayBounds(window->monitor->ns.displayID);
     const NSRect frame = NSMakeRect(bounds.origin.x,
@@ -141,6 +156,8 @@ static void releaseMonitor(_GLFWwindow* window)
         return;
 
     _glfwInputMonitorWindowChange(window->monitor, NULL);
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     _glfwRestoreVideoModeNS(window->monitor);
 }
 
@@ -232,7 +249,11 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
 - (void)windowDidResize:(NSNotification *)notification
 {
+<<<<<<< HEAD
     if (window->context.client != GLFW_NO_API)
+=======
+    if (window->context.api != GLFW_NO_API)
+>>>>>>> Started addition of Vulkan support on Linux
         [window->context.nsgl.object update];
 
     if (_glfw.ns.disabledCursorWindow == window)
@@ -247,7 +268,11 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
 - (void)windowDidMove:(NSNotification *)notification
 {
+<<<<<<< HEAD
     if (window->context.client != GLFW_NO_API)
+=======
+    if (window->context.api != GLFW_NO_API)
+>>>>>>> Started addition of Vulkan support on Linux
         [window->context.nsgl.object update];
 
     if (_glfw.ns.disabledCursorWindow == window)
@@ -261,7 +286,11 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 - (void)windowDidMiniaturize:(NSNotification *)notification
 {
     if (window->monitor)
+<<<<<<< HEAD
         releaseMonitor(window);
+=======
+        leaveFullscreenMode(window);
+>>>>>>> Started addition of Vulkan support on Linux
 
     _glfwInputWindowIconify(window, GLFW_TRUE);
 }
@@ -269,14 +298,24 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 - (void)windowDidDeminiaturize:(NSNotification *)notification
 {
     if (window->monitor)
+<<<<<<< HEAD
         acquireMonitor(window);
+=======
+        enterFullscreenMode(window);
+>>>>>>> Started addition of Vulkan support on Linux
 
     _glfwInputWindowIconify(window, GLFW_FALSE);
 }
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
+<<<<<<< HEAD
     if (_glfw.ns.disabledCursorWindow == window)
+=======
+    if (_glfw.cursorWindow == window &&
+        window->cursorMode == GLFW_CURSOR_DISABLED)
+    {
+>>>>>>> Started addition of Vulkan support on Linux
         centerCursor(window);
 
     _glfwInputWindowFocus(window, GLFW_TRUE);
@@ -408,7 +447,11 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
 - (void)cursorUpdate:(NSEvent *)event
 {
+<<<<<<< HEAD
     updateCursorImage(window);
+=======
+    _glfwPlatformSetCursorMode(window, window->cursorMode);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 - (void)mouseDown:(NSEvent *)event
@@ -944,8 +987,13 @@ static GLFWbool initializeAppKit(void)
 
 // Create the Cocoa window
 //
+<<<<<<< HEAD
 static GLFWbool createNativeWindow(_GLFWwindow* window,
                                    const _GLFWwndconfig* wndconfig)
+=======
+static GLFWbool createWindow(_GLFWwindow* window,
+                             const _GLFWwndconfig* wndconfig)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     window->ns.delegate = [[GLFWWindowDelegate alloc] initWithGlfwWindow:window];
     if (window->ns.delegate == nil)
@@ -965,6 +1013,19 @@ static GLFWbool createNativeWindow(_GLFWwindow* window,
         _glfwPlatformGetVideoMode(window->monitor, &mode);
         _glfwPlatformGetMonitorPos(window->monitor, &xpos, &ypos);
 
+<<<<<<< HEAD
+=======
+    NSRect contentRect;
+
+    if (wndconfig->monitor)
+    {
+        GLFWvidmode mode;
+        int xpos, ypos;
+
+        _glfwPlatformGetVideoMode(window->monitor, &mode);
+        _glfwPlatformGetMonitorPos(window->monitor, &xpos, &ypos);
+
+>>>>>>> Started addition of Vulkan support on Linux
         contentRect = NSMakeRect(xpos, ypos, mode.width, mode.height);
     }
     else
@@ -981,9 +1042,19 @@ static GLFWbool createNativeWindow(_GLFWwindow* window,
         _glfwInputError(GLFW_PLATFORM_ERROR, "Cocoa: Failed to create window");
         return GLFW_FALSE;
     }
+<<<<<<< HEAD
+=======
+
+    if (wndconfig->resizable)
+        [window->ns.object setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+>>>>>>> Started addition of Vulkan support on Linux
 
     if (window->monitor)
         [window->ns.object setLevel:NSMainMenuWindowLevel + 1];
+<<<<<<< HEAD
+=======
+    }
+>>>>>>> Started addition of Vulkan support on Linux
     else
     {
         [window->ns.object center];
@@ -1027,6 +1098,7 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
     if (!initializeAppKit())
         return GLFW_FALSE;
 
+<<<<<<< HEAD
     if (!createNativeWindow(window, wndconfig))
         return GLFW_FALSE;
 
@@ -1044,16 +1116,30 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
             _glfwInputError(GLFW_API_UNAVAILABLE, "Cocoa: EGL not available");
             return GLFW_FALSE;
         }
+=======
+    if (!createWindow(window, wndconfig))
+        return GLFW_FALSE;
+
+    if (ctxconfig->api != GLFW_NO_API)
+    {
+        if (!_glfwCreateContextNSGL(window, ctxconfig, fbconfig))
+            return GLFW_FALSE;
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     if (window->monitor)
     {
         _glfwPlatformShowWindow(window);
+<<<<<<< HEAD
         _glfwPlatformFocusWindow(window);
         if (!acquireMonitor(window))
             return GLFW_FALSE;
 
         centerCursor(window);
+=======
+        if (!enterFullscreenMode(window))
+            return GLFW_FALSE;
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     return GLFW_TRUE;
@@ -1069,8 +1155,13 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
     if (window->monitor)
         releaseMonitor(window);
 
+<<<<<<< HEAD
     if (window->context.destroy)
         window->context.destroy(window);
+=======
+    if (window->context.api != GLFW_NO_API)
+        _glfwDestroyContextNSGL(window);
+>>>>>>> Started addition of Vulkan support on Linux
 
     [window->ns.object setDelegate:nil];
     [window->ns.delegate release];
@@ -1147,7 +1238,11 @@ void _glfwPlatformSetWindowSizeLimits(_GLFWwindow* window,
         [window->ns.object setContentMinSize:NSMakeSize(minwidth, minheight)];
 
     if (maxwidth == GLFW_DONT_CARE || maxheight == GLFW_DONT_CARE)
+<<<<<<< HEAD
         [window->ns.object setContentMaxSize:NSMakeSize(DBL_MAX, DBL_MAX)];
+=======
+        [window->ns.object setContentMaxSize:NSMakeSize(0, 0)];
+>>>>>>> Started addition of Vulkan support on Linux
     else
         [window->ns.object setContentMaxSize:NSMakeSize(maxwidth, maxheight)];
 }
@@ -1201,16 +1296,20 @@ void _glfwPlatformRestoreWindow(_GLFWwindow* window)
         [window->ns.object deminiaturize:nil];
     else if ([window->ns.object isZoomed])
         [window->ns.object zoom:nil];
+<<<<<<< HEAD
 }
 
 void _glfwPlatformMaximizeWindow(_GLFWwindow* window)
 {
     if (![window->ns.object isZoomed])
         [window->ns.object zoom:nil];
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
-void _glfwPlatformShowWindow(_GLFWwindow* window)
+void _glfwPlatformMaximizeWindow(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     [window->ns.object orderFront:nil];
 }
 
@@ -1235,6 +1334,13 @@ void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
                                    int xpos, int ypos,
                                    int width, int height,
                                    int refreshRate)
+=======
+    if (![window->ns.object isZoomed])
+        [window->ns.object zoom:nil];
+}
+
+void _glfwPlatformShowWindow(_GLFWwindow* window)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     if (window->monitor == monitor)
     {
@@ -1325,6 +1431,17 @@ void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
 
         [window->ns.object setHasShadow:YES];
     }
+}
+
+void _glfwPlatformFocusWindow(_GLFWwindow* window)
+{
+    // Make us the active application
+    // HACK: This has been moved here from initializeAppKit to prevent
+    //       applications using only hidden windows from being activated, but
+    //       should probably not be done every time any window is shown
+    [NSApp activateIgnoringOtherApps:YES];
+
+    [window->ns.object makeKeyAndOrderFront:nil];
 }
 
 int _glfwPlatformWindowFocused(_GLFWwindow* window)
@@ -1421,7 +1538,11 @@ void _glfwPlatformGetCursorPos(_GLFWwindow* window, double* xpos, double* ypos)
 
 void _glfwPlatformSetCursorPos(_GLFWwindow* window, double x, double y)
 {
+<<<<<<< HEAD
     updateCursorImage(window);
+=======
+    _glfwPlatformSetCursorMode(window, window->cursorMode);
+>>>>>>> Started addition of Vulkan support on Linux
 
     const NSRect contentRect = [window->ns.view frame];
     const NSPoint pos = [window->ns.object mouseLocationOutsideOfEventStream];
@@ -1447,6 +1568,7 @@ void _glfwPlatformSetCursorPos(_GLFWwindow* window, double x, double y)
 
 void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
 {
+<<<<<<< HEAD
     if (mode == GLFW_CURSOR_DISABLED)
     {
         _glfw.ns.disabledCursorWindow = window;
@@ -1454,6 +1576,19 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
                                   &_glfw.ns.restoreCursorPosX,
                                   &_glfw.ns.restoreCursorPosY);
         centerCursor(window);
+=======
+    if (mode == GLFW_CURSOR_NORMAL)
+    {
+        if (window->cursor)
+            [(NSCursor*) window->cursor->ns.object set];
+        else
+            [[NSCursor arrowCursor] set];
+    }
+    else
+        [(NSCursor*) _glfw.ns.cursor set];
+
+    if (mode == GLFW_CURSOR_DISABLED)
+>>>>>>> Started addition of Vulkan support on Linux
         CGAssociateMouseAndMouseCursorPosition(false);
     }
     else if (_glfw.ns.disabledCursorWindow == window)
@@ -1467,6 +1602,48 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
 
     if (cursorInClientArea(window))
         updateCursorImage(window);
+}
+
+const char* _glfwPlatformGetKeyName(int key, int scancode)
+{
+    if (key != GLFW_KEY_UNKNOWN)
+        scancode = _glfw.ns.nativeKeys[key];
+
+    if (!_glfwIsPrintable(_glfw.ns.publicKeys[scancode]))
+        return NULL;
+
+    UInt32 deadKeyState = 0;
+    UniChar characters[8];
+    UniCharCount characterCount = 0;
+
+    if (UCKeyTranslate([(NSData*) _glfw.ns.unicodeData bytes],
+                       scancode,
+                       kUCKeyActionDisplay,
+                       0,
+                       LMGetKbdType(),
+                       kUCKeyTranslateNoDeadKeysBit,
+                       &deadKeyState,
+                       sizeof(characters) / sizeof(characters[0]),
+                       &characterCount,
+                       characters) != noErr)
+    {
+        return NULL;
+    }
+
+    if (!characterCount)
+        return NULL;
+
+    CFStringRef string = CFStringCreateWithCharactersNoCopy(kCFAllocatorDefault,
+                                                            characters,
+                                                            characterCount,
+                                                            kCFAllocatorNull);
+    CFStringGetCString(string,
+                       _glfw.ns.keyName,
+                       sizeof(_glfw.ns.keyName),
+                       kCFStringEncodingUTF8);
+    CFRelease(string);
+
+    return _glfw.ns.keyName;
 }
 
 const char* _glfwPlatformGetKeyName(int key, int scancode)
@@ -1618,7 +1795,11 @@ const char* _glfwPlatformGetClipboardString(_GLFWwindow* window)
     return _glfw.ns.clipboardString;
 }
 
+<<<<<<< HEAD
 char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
+=======
+char** _glfwPlatformGetRequiredInstanceExtensions(unsigned int* count)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     *count = 0;
     return NULL;
@@ -1626,7 +1807,11 @@ char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
 
 int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance,
                                                       VkPhysicalDevice device,
+<<<<<<< HEAD
                                                       uint32_t queuefamily)
+=======
+                                                      unsigned int queuefamily)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     return GLFW_FALSE;
 }

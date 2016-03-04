@@ -436,6 +436,7 @@ static char** parseUriList(char* text, int* count)
 
 // Centers the cursor over the window client area
 //
+<<<<<<< HEAD
 static void centerCursor(_GLFWwindow* window)
 {
     int width, height;
@@ -460,6 +461,15 @@ static void updateCursorImage(_GLFWwindow* window)
     else
         XDefineCursor(_glfw.x11.display, window->x11.handle, _glfw.x11.cursor);
 }
+=======
+static GLFWbool createWindow(_GLFWwindow* window,
+                             const _GLFWwndconfig* wndconfig,
+                             Visual* visual, int depth)
+{
+    // Every window needs a colormap
+    // Create one based on the visual used by the current context
+    // TODO: Decouple this from context creation
+>>>>>>> Started addition of Vulkan support on Linux
 
 // Create the X11 window (and its colormap)
 //
@@ -524,6 +534,7 @@ static GLFWbool createNativeWindow(_GLFWwindow* window,
             unsigned long status;
         } hints;
 
+<<<<<<< HEAD
         hints.flags = 2;       // Set decorations
         hints.decorations = 0; // No decorations
 
@@ -533,6 +544,17 @@ static GLFWbool createNativeWindow(_GLFWwindow* window,
                         PropModeReplace,
                         (unsigned char*) &hints,
                         sizeof(hints) / sizeof(long));
+=======
+            XSetWindowAttributes attributes;
+            attributes.override_redirect = True;
+            XChangeWindowAttributes(_glfw.x11.display,
+                                    window->x11.handle,
+                                    CWOverrideRedirect,
+                                    &attributes);
+
+            window->x11.overrideRedirect = GLFW_TRUE;
+        }
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     if (_glfw.x11.NET_WM_STATE && !window->monitor)
@@ -555,6 +577,28 @@ static GLFWbool createNativeWindow(_GLFWwindow* window,
                 states[count++] = _glfw.x11.NET_WM_STATE_MAXIMIZED_HORZ;
             }
         }
+<<<<<<< HEAD
+=======
+
+        if (wndconfig->maximized)
+        {
+            if (_glfw.x11.NET_WM_STATE &&
+                _glfw.x11.NET_WM_STATE_MAXIMIZED_VERT &&
+                _glfw.x11.NET_WM_STATE_MAXIMIZED_HORZ)
+            {
+                const Atom states[2] =
+                {
+                    _glfw.x11.NET_WM_STATE_MAXIMIZED_VERT,
+                    _glfw.x11.NET_WM_STATE_MAXIMIZED_HORZ
+                };
+
+                XChangeProperty(_glfw.x11.display, window->x11.handle,
+                                _glfw.x11.NET_WM_STATE, XA_ATOM, 32,
+                                PropModeReplace, (unsigned char*) &states, 2);
+            }
+        }
+    }
+>>>>>>> Started addition of Vulkan support on Linux
 
         if (count)
         {
@@ -653,6 +697,18 @@ static GLFWbool createNativeWindow(_GLFWwindow* window,
     _glfwPlatformGetWindowSize(window, &window->x11.width, &window->x11.height);
 
     return GLFW_TRUE;
+<<<<<<< HEAD
+=======
+}
+
+// Returns whether the event is a selection event
+//
+static Bool isSelectionEvent(Display* display, XEvent* event, XPointer pointer)
+{
+    return event->type == SelectionRequest ||
+           event->type == SelectionNotify ||
+           event->type == SelectionClear;
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 // Set the specified property to the selection converted to the requested target
@@ -877,8 +933,18 @@ static GLFWbool acquireMonitor(_GLFWwindow* window)
                         DefaultExposures);
     }
 
+<<<<<<< HEAD
     if (!window->monitor->window)
         _glfw.x11.saver.count++;
+=======
+    _glfw.x11.saver.count++;
+
+    _glfwSetVideoModeX11(window->monitor, &window->videoMode);
+
+    if (_glfw.x11.NET_WM_BYPASS_COMPOSITOR)
+    {
+        const unsigned long value = 1;
+>>>>>>> Started addition of Vulkan support on Linux
 
     status = _glfwSetVideoModeX11(window->monitor, &window->videoMode);
 
@@ -895,18 +961,48 @@ static GLFWbool acquireMonitor(_GLFWwindow* window)
                           xpos, ypos, mode.width, mode.height);
     }
 
+<<<<<<< HEAD
     _glfwInputMonitorWindowChange(window->monitor, window);
     return status;
+=======
+    if (_glfw.x11.xinerama.available && _glfw.x11.NET_WM_FULLSCREEN_MONITORS)
+    {
+        sendEventToWM(window,
+                      _glfw.x11.NET_WM_FULLSCREEN_MONITORS,
+                      window->monitor->x11.index,
+                      window->monitor->x11.index,
+                      window->monitor->x11.index,
+                      window->monitor->x11.index,
+                      0);
+    }
+
+    _glfwPlatformFocusWindow(window);
+
+    if (_glfw.x11.NET_WM_STATE && _glfw.x11.NET_WM_STATE_FULLSCREEN)
+    {
+        // Ask the window manager to make the GLFW window a full screen window
+        // Full screen windows are undecorated and, when focused, are kept
+        // on top of all other windows
+        sendEventToWM(window,
+                      _glfw.x11.NET_WM_STATE,
+                      _NET_WM_STATE_ADD,
+                      _glfw.x11.NET_WM_STATE_FULLSCREEN,
+                      0, 1, 0);
+    }
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 // Remove the window and restore the original video mode
 //
 static void releaseMonitor(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     if (window->monitor->window != window)
         return;
 
     _glfwInputMonitorWindowChange(window->monitor, NULL);
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     _glfwRestoreVideoModeX11(window->monitor);
 
     _glfw.x11.saver.count--;
@@ -963,6 +1059,19 @@ static void processEvent(XEvent *event)
         filtered = XFilterEvent(event, None);
 
     if (_glfw.x11.randr.available)
+<<<<<<< HEAD
+=======
+    {
+        if (event->type == _glfw.x11.randr.eventBase + RRNotify)
+        {
+            XRRUpdateConfiguration(event);
+            _glfwInputMonitorChange();
+            return;
+        }
+    }
+
+    if (event->type != GenericEvent)
+>>>>>>> Started addition of Vulkan support on Linux
     {
         if (event->type == _glfw.x11.randr.eventBase + RRNotify)
         {
@@ -1241,6 +1350,9 @@ static void processEvent(XEvent *event)
 
         case ConfigureNotify:
         {
+            if (!window->x11.overrideRedirect && !event->xany.send_event)
+                return;
+
             if (event->xconfigure.width != window->x11.width ||
                 event->xconfigure.height != window->x11.height)
             {
@@ -1419,6 +1531,12 @@ static void processEvent(XEvent *event)
             if (window->x11.ic)
                 XSetICFocus(window->x11.ic);
 
+<<<<<<< HEAD
+=======
+            if (window->cursorMode == GLFW_CURSOR_DISABLED)
+                _glfwPlatformSetCursorMode(window, GLFW_CURSOR_DISABLED);
+
+>>>>>>> Started addition of Vulkan support on Linux
             _glfwInputWindowFocus(window, GLFW_TRUE);
             return;
         }
@@ -1439,6 +1557,12 @@ static void processEvent(XEvent *event)
             if (window->x11.ic)
                 XUnsetICFocus(window->x11.ic);
 
+<<<<<<< HEAD
+=======
+            if (window->cursorMode == GLFW_CURSOR_DISABLED)
+                _glfwPlatformSetCursorMode(window, GLFW_CURSOR_NORMAL);
+
+>>>>>>> Started addition of Vulkan support on Linux
             if (window->monitor && window->autoIconify)
                 _glfwPlatformIconifyWindow(window);
 
@@ -1461,14 +1585,22 @@ static void processEvent(XEvent *event)
                 if (state == IconicState)
                 {
                     if (window->monitor)
+<<<<<<< HEAD
                         releaseMonitor(window);
+=======
+                        leaveFullscreenMode(window);
+>>>>>>> Started addition of Vulkan support on Linux
 
                     _glfwInputWindowIconify(window, GLFW_TRUE);
                 }
                 else if (state == NormalState)
                 {
                     if (window->monitor)
+<<<<<<< HEAD
                         acquireMonitor(window);
+=======
+                        enterFullscreenMode(window);
+>>>>>>> Started addition of Vulkan support on Linux
 
                     _glfwInputWindowIconify(window, GLFW_FALSE);
                 }
@@ -1542,6 +1674,7 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
 {
     Visual* visual;
     int depth;
+<<<<<<< HEAD
 
     if (ctxconfig->client == GLFW_NO_API)
     {
@@ -1564,6 +1697,37 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
             if (!_glfwChooseVisualEGL(ctxconfig, fbconfig, &visual, &depth))
                 return GLFW_FALSE;
         }
+=======
+
+    if (ctxconfig->api == GLFW_NO_API)
+    {
+        visual = DefaultVisual(_glfw.x11.display, _glfw.x11.screen);
+        depth = DefaultDepth(_glfw.x11.display, _glfw.x11.screen);
+    }
+    else
+    {
+#if defined(_GLFW_GLX)
+        if (!_glfwChooseVisualGLX(ctxconfig, fbconfig, &visual, &depth))
+            return GLFW_FALSE;
+#elif defined(_GLFW_EGL)
+        if (!_glfwChooseVisualEGL(ctxconfig, fbconfig, &visual, &depth))
+            return GLFW_FALSE;
+#endif
+    }
+
+    if (!createWindow(window, wndconfig, visual, depth))
+        return GLFW_FALSE;
+
+    if (ctxconfig->api != GLFW_NO_API)
+    {
+#if defined(_GLFW_GLX)
+        if (!_glfwCreateContextGLX(window, ctxconfig, fbconfig))
+            return GLFW_FALSE;
+#elif defined(_GLFW_EGL)
+        if (!_glfwCreateContextEGL(window, ctxconfig, fbconfig))
+            return GLFW_FALSE;
+#endif
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     if (!createNativeWindow(window, wndconfig, visual, depth))
@@ -1593,7 +1757,10 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
         centerCursor(window);
     }
 
+<<<<<<< HEAD
     XFlush(_glfw.x11.display);
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     return GLFW_TRUE;
 }
 
@@ -1611,8 +1778,19 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
         window->x11.ic = NULL;
     }
 
+<<<<<<< HEAD
     if (window->context.destroy)
         window->context.destroy(window);
+=======
+    if (window->context.api != GLFW_NO_API)
+    {
+#if defined(_GLFW_GLX)
+        _glfwDestroyContextGLX(window);
+#elif defined(_GLFW_EGL)
+        _glfwDestroyContextEGL(window);
+#endif
+    }
+>>>>>>> Started addition of Vulkan support on Linux
 
     if (window->x11.handle)
     {
@@ -1766,8 +1944,20 @@ void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
 {
     if (window->monitor)
     {
+<<<<<<< HEAD
         if (window->monitor->window == window)
             acquireMonitor(window);
+=======
+        _glfwSetVideoModeX11(window->monitor, &window->videoMode);
+
+        if (!_glfw.x11.NET_WM_STATE || !_glfw.x11.NET_WM_STATE_FULLSCREEN)
+        {
+            GLFWvidmode mode;
+            _glfwPlatformGetVideoMode(window->monitor, &mode);
+            XResizeWindow(_glfw.x11.display, window->x11.handle,
+                          mode.width, mode.height);
+        }
+>>>>>>> Started addition of Vulkan support on Linux
     }
     else
     {
@@ -1784,18 +1974,69 @@ void _glfwPlatformSetWindowSizeLimits(_GLFWwindow* window,
                                       int minwidth, int minheight,
                                       int maxwidth, int maxheight)
 {
+<<<<<<< HEAD
     int width, height;
     _glfwPlatformGetWindowSize(window, &width, &height);
     updateNormalHints(window, width, height);
     XFlush(_glfw.x11.display);
+=======
+    long supplied;
+    XSizeHints* hints = XAllocSizeHints();
+
+    if (XGetWMNormalHints(_glfw.x11.display, window->x11.handle, hints, &supplied))
+    {
+        if (minwidth == GLFW_DONT_CARE || minwidth == GLFW_DONT_CARE)
+            hints->flags &= ~PMinSize;
+        else
+        {
+            hints->flags |= PMinSize;
+            hints->min_width  = minwidth;
+            hints->min_height = minheight;
+        }
+
+        if (maxwidth == GLFW_DONT_CARE || maxwidth == GLFW_DONT_CARE)
+            hints->flags &= ~PMaxSize;
+        else
+        {
+            hints->flags |= PMaxSize;
+            hints->max_width  = maxwidth;
+            hints->max_height = maxheight;
+        }
+
+        XSetWMNormalHints(_glfw.x11.display, window->x11.handle, hints);
+    }
+
+    XFree(hints);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwPlatformSetWindowAspectRatio(_GLFWwindow* window, int numer, int denom)
 {
+<<<<<<< HEAD
     int width, height;
     _glfwPlatformGetWindowSize(window, &width, &height);
     updateNormalHints(window, width, height);
     XFlush(_glfw.x11.display);
+=======
+    long supplied;
+    XSizeHints* hints = XAllocSizeHints();
+
+    if (XGetWMNormalHints(_glfw.x11.display, window->x11.handle, hints, &supplied))
+    {
+        if (numer == GLFW_DONT_CARE || denom == GLFW_DONT_CARE)
+            hints->flags &= ~PAspect;
+        else
+        {
+            hints->flags |= PAspect;
+            hints->min_aspect.x = hints->max_aspect.x = numer;
+            hints->min_aspect.y = hints->max_aspect.y = denom;
+        }
+
+        XSetWMNormalHints(_glfw.x11.display, window->x11.handle, hints);
+    }
+
+    XFree(hints);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwPlatformGetFramebufferSize(_GLFWwindow* window, int* width, int* height)
@@ -1891,11 +2132,16 @@ void _glfwPlatformRestoreWindow(_GLFWwindow* window)
     }
 
     if (_glfwPlatformWindowIconified(window))
+<<<<<<< HEAD
     {
         XMapWindow(_glfw.x11.display, window->x11.handle);
         waitForVisibilityNotify(window);
     }
     else if (_glfwPlatformWindowVisible(window))
+=======
+        XMapWindow(_glfw.x11.display, window->x11.handle);
+    else
+>>>>>>> Started addition of Vulkan support on Linux
     {
         if (_glfw.x11.NET_WM_STATE &&
             _glfw.x11.NET_WM_STATE_MAXIMIZED_VERT &&
@@ -1947,7 +2193,16 @@ void _glfwPlatformHideWindow(_GLFWwindow* window)
 void _glfwPlatformFocusWindow(_GLFWwindow* window)
 {
     if (_glfw.x11.NET_ACTIVE_WINDOW)
+<<<<<<< HEAD
         sendEventToWM(window, _glfw.x11.NET_ACTIVE_WINDOW, 1, 0, 0, 0, 0);
+=======
+    {
+        // Ask the window manager to raise and focus the GLFW window
+        // Only focused windows with the _NET_WM_STATE_FULLSCREEN state end up
+        // on top of all other windows ("Stacking order" in EWMH spec)
+        sendEventToWM(window, _glfw.x11.NET_ACTIVE_WINDOW, 1, 0, 0, 0, 0);
+    }
+>>>>>>> Started addition of Vulkan support on Linux
     else
     {
         XRaiseWindow(_glfw.x11.display, window->x11.handle);
@@ -1958,6 +2213,7 @@ void _glfwPlatformFocusWindow(_GLFWwindow* window)
     XFlush(_glfw.x11.display);
 }
 
+<<<<<<< HEAD
 void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
                                    _GLFWmonitor* monitor,
                                    int xpos, int ypos,
@@ -2002,6 +2258,8 @@ void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
     XFlush(_glfw.x11.display);
 }
 
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 int _glfwPlatformWindowFocused(_GLFWwindow* window)
 {
     Window focused;
@@ -2132,15 +2390,41 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
 {
     if (mode == GLFW_CURSOR_DISABLED)
     {
+<<<<<<< HEAD
         _glfw.x11.disabledCursorWindow = window;
         _glfwPlatformGetCursorPos(window,
                                   &_glfw.x11.restoreCursorPosX,
                                   &_glfw.x11.restoreCursorPosY);
         centerCursor(window);
+=======
+>>>>>>> Started addition of Vulkan support on Linux
         XGrabPointer(_glfw.x11.display, window->x11.handle, True,
                      ButtonPressMask | ButtonReleaseMask | PointerMotionMask,
                      GrabModeAsync, GrabModeAsync,
                      window->x11.handle, _glfw.x11.cursor, CurrentTime);
+<<<<<<< HEAD
+=======
+    }
+    else
+    {
+        XUngrabPointer(_glfw.x11.display, CurrentTime);
+
+        if (mode == GLFW_CURSOR_NORMAL)
+        {
+            if (window->cursor)
+            {
+                XDefineCursor(_glfw.x11.display, window->x11.handle,
+                              window->cursor->x11.handle);
+            }
+            else
+                XUndefineCursor(_glfw.x11.display, window->x11.handle);
+        }
+        else
+        {
+            XDefineCursor(_glfw.x11.display, window->x11.handle,
+                          _glfw.x11.cursor);
+        }
+>>>>>>> Started addition of Vulkan support on Linux
     }
     else if (_glfw.x11.disabledCursorWindow == window)
     {
@@ -2153,6 +2437,34 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
 
     updateCursorImage(window);
     XFlush(_glfw.x11.display);
+}
+
+const char* _glfwPlatformGetKeyName(int key, int scancode)
+{
+    KeySym keysym;
+    int extra;
+
+    if (!_glfw.x11.xkb.available)
+        return NULL;
+
+    if (key != GLFW_KEY_UNKNOWN)
+        scancode = _glfw.x11.nativeKeys[key];
+
+    if (!_glfwIsPrintable(_glfw.x11.publicKeys[scancode]))
+        return NULL;
+
+    keysym = XkbKeycodeToKeysym(_glfw.x11.display, scancode, 0, 0);
+    if (keysym == NoSymbol)
+      return NULL;
+
+    XkbTranslateKeySym(_glfw.x11.display, &keysym, 0,
+                       _glfw.x11.keyName, sizeof(_glfw.x11.keyName),
+                       &extra);
+
+    if (!strlen(_glfw.x11.keyName))
+        return NULL;
+
+    return _glfw.x11.keyName;
 }
 
 const char* _glfwPlatformGetKeyName(int key, int scancode)
@@ -2303,7 +2615,11 @@ const char* _glfwPlatformGetClipboardString(_GLFWwindow* window)
     return _glfw.x11.clipboardString;
 }
 
+<<<<<<< HEAD
 char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
+=======
+char** _glfwPlatformGetRequiredInstanceExtensions(unsigned int* count)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     char** extensions;
 
@@ -2329,7 +2645,11 @@ char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
 
 int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance,
                                                       VkPhysicalDevice device,
+<<<<<<< HEAD
                                                       uint32_t queuefamily)
+=======
+                                                      unsigned int queuefamily)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     VisualID visualID = XVisualIDFromVisual(DefaultVisual(_glfw.x11.display,
                                                           _glfw.x11.screen));

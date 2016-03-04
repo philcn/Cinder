@@ -198,6 +198,7 @@ static void createKeyTables(void)
         if (_glfw.ns.publicKeys[scancode] >= 0)
             _glfw.ns.nativeKeys[_glfw.ns.publicKeys[scancode]] = scancode;
     }
+<<<<<<< HEAD
 }
 
 // Retrieve Unicode data for the current keyboard layout
@@ -229,6 +230,8 @@ static GLFWbool updateUnicodeDataNS(void)
     }
 
     return GLFW_TRUE;
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 // Load HIToolbox.framework and the TIS symbols we need from it
@@ -319,6 +322,7 @@ int _glfwPlatformInit(void)
 
     CGEventSourceSetLocalEventsSuppressionInterval(_glfw.ns.eventSource, 0.0);
 
+<<<<<<< HEAD
     if (!initializeTIS())
         return GLFW_FALSE;
 
@@ -328,6 +332,28 @@ int _glfwPlatformInit(void)
     _glfwInitTimerNS();
     _glfwInitJoysticksNS();
 
+=======
+    // TODO: Catch kTISNotifySelectedKeyboardInputSourceChanged and update
+
+    _glfw.ns.inputSource = TISCopyCurrentKeyboardLayoutInputSource();
+    if (!_glfw.ns.inputSource)
+        return GLFW_FALSE;
+
+    _glfw.ns.unicodeData = TISGetInputSourceProperty(_glfw.ns.inputSource,
+                                                     kTISPropertyUnicodeKeyLayoutData);
+    if (!_glfw.ns.unicodeData)
+        return GLFW_FALSE;
+
+    if (!_glfwInitThreadLocalStoragePOSIX())
+        return GLFW_FALSE;
+
+    if (!_glfwInitNSGL())
+        return GLFW_FALSE;
+
+    _glfwInitTimerNS();
+    _glfwInitJoysticksNS();
+
+>>>>>>> Started addition of Vulkan support on Linux
     return GLFW_TRUE;
 }
 
@@ -337,7 +363,10 @@ void _glfwPlatformTerminate(void)
     {
         CFRelease(_glfw.ns.inputSource);
         _glfw.ns.inputSource = NULL;
+<<<<<<< HEAD
         _glfw.ns.unicodeData = nil;
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     if (_glfw.ns.eventSource)
@@ -353,6 +382,7 @@ void _glfwPlatformTerminate(void)
         _glfw.ns.delegate = nil;
     }
 
+<<<<<<< HEAD
     if (_glfw.ns.listener)
     {
         [[NSDistributedNotificationCenter defaultCenter]
@@ -365,6 +395,8 @@ void _glfwPlatformTerminate(void)
         _glfw.ns.listener = nil;
     }
 
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     [_glfw.ns.cursor release];
     _glfw.ns.cursor = nil;
 

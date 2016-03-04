@@ -351,7 +351,17 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
                               const _GLFWctxconfig* ctxconfig,
                               const _GLFWfbconfig* fbconfig)
 {
+<<<<<<< HEAD
     if (window->monitor)
+=======
+    if (ctxconfig->api != GLFW_NO_API)
+    {
+        if (!_glfwCreateContextEGL(window, ctxconfig, fbconfig))
+            return GLFW_FALSE;
+    }
+
+    if (wndconfig->monitor)
+>>>>>>> Started addition of Vulkan support on Linux
     {
         GLFWvidmode mode;
         _glfwPlatformGetVideoMode(window->monitor, &mode);
@@ -377,6 +387,7 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
     window->mir.window = mir_buffer_stream_get_egl_native_window(
                                    mir_surface_get_buffer_stream(window->mir.surface));
 
+<<<<<<< HEAD
     if (ctxconfig->client != GLFW_NO_API)
     {
         if (!_glfwInitEGL())
@@ -385,6 +396,8 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
             return GLFW_FALSE;
     }
 
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     return GLFW_TRUE;
 }
 
@@ -396,8 +409,12 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
         window->mir.surface = NULL;
     }
 
+<<<<<<< HEAD
     if (window->context.destroy)
         window->context.destroy(window);
+=======
+    _glfwDestroyContextEGL(window);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char* title)
@@ -512,6 +529,7 @@ void _glfwPlatformShowWindow(_GLFWwindow* window)
 }
 
 void _glfwPlatformFocusWindow(_GLFWwindow* window)
+<<<<<<< HEAD
 {
     _glfwInputError(GLFW_PLATFORM_ERROR,
                     "Mir: Unsupported function %s", __PRETTY_FUNCTION__);
@@ -522,6 +540,8 @@ void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
                                    int xpos, int ypos,
                                    int width, int height,
                                    int refreshRate)
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 {
     _glfwInputError(GLFW_PLATFORM_ERROR,
                     "Mir: Unsupported function %s", __PRETTY_FUNCTION__);
@@ -758,7 +778,11 @@ const char* _glfwPlatformGetClipboardString(_GLFWwindow* window)
     return NULL;
 }
 
+<<<<<<< HEAD
 char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
+=======
+char** _glfwPlatformGetRequiredInstanceExtensions(unsigned int* count)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     char** extensions;
 
@@ -777,7 +801,11 @@ char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
 
 int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance,
                                                       VkPhysicalDevice device,
+<<<<<<< HEAD
                                                       uint32_t queuefamily)
+=======
+                                                      unsigned int queuefamily)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     PFN_vkGetPhysicalDeviceMirPresentationSupportKHR vkGetPhysicalDeviceMirPresentationSupportKHR =
         (PFN_vkGetPhysicalDeviceMirPresentationSupportKHR)

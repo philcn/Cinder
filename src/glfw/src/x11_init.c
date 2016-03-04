@@ -580,6 +580,7 @@ static GLFWbool initExtensions(void)
     _glfw.x11.SAVE_TARGETS =
         XInternAtom(_glfw.x11.display, "SAVE_TARGETS", False);
 
+<<<<<<< HEAD
     // Xdnd (drag and drop) atoms
     _glfw.x11.XdndAware = XInternAtom(_glfw.x11.display, "XdndAware", False);
     _glfw.x11.XdndEnter = XInternAtom(_glfw.x11.display, "XdndEnter", False);
@@ -614,6 +615,18 @@ static GLFWbool initExtensions(void)
         XInternAtom(_glfw.x11.display, "_NET_WM_BYPASS_COMPOSITOR", False);
     _glfw.x11.MOTIF_WM_HINTS =
         XInternAtom(_glfw.x11.display, "_MOTIF_WM_HINTS", False);
+=======
+    // Find Xdnd (drag and drop) atoms, if available
+    _glfw.x11.XdndAware = XInternAtom(_glfw.x11.display, "XdndAware", True);
+    _glfw.x11.XdndEnter = XInternAtom(_glfw.x11.display, "XdndEnter", True);
+    _glfw.x11.XdndPosition = XInternAtom(_glfw.x11.display, "XdndPosition", True);
+    _glfw.x11.XdndStatus = XInternAtom(_glfw.x11.display, "XdndStatus", True);
+    _glfw.x11.XdndActionCopy = XInternAtom(_glfw.x11.display, "XdndActionCopy", True);
+    _glfw.x11.XdndDrop = XInternAtom(_glfw.x11.display, "XdndDrop", True);
+    _glfw.x11.XdndLeave = XInternAtom(_glfw.x11.display, "XdndLeave", True);
+    _glfw.x11.XdndFinished = XInternAtom(_glfw.x11.display, "XdndFinished", True);
+    _glfw.x11.XdndSelection = XInternAtom(_glfw.x11.display, "XdndSelection", True);
+>>>>>>> Started addition of Vulkan support on Linux
 
     return GLFW_TRUE;
 }
@@ -764,6 +777,17 @@ int _glfwPlatformInit(void)
 
     if (!_glfwInitThreadLocalStoragePOSIX())
         return GLFW_FALSE;
+<<<<<<< HEAD
+=======
+
+#if defined(_GLFW_GLX)
+    if (!_glfwInitGLX())
+        return GLFW_FALSE;
+#elif defined(_GLFW_EGL)
+    if (!_glfwInitEGL())
+        return GLFW_FALSE;
+#endif
+>>>>>>> Started addition of Vulkan support on Linux
 
     if (!_glfwInitJoysticksLinux())
         return GLFW_FALSE;
@@ -795,7 +819,13 @@ void _glfwPlatformTerminate(void)
         _glfw.x11.im = NULL;
     }
 
+<<<<<<< HEAD
     _glfwTerminateEGL();
+=======
+#if defined(_GLFW_EGL)
+    _glfwTerminateEGL();
+#endif
+>>>>>>> Started addition of Vulkan support on Linux
 
     if (_glfw.x11.display)
     {
@@ -805,7 +835,13 @@ void _glfwPlatformTerminate(void)
 
     // NOTE: This needs to be done after XCloseDisplay, as libGL registers
     //       cleanup callbacks that get called by it
+<<<<<<< HEAD
     _glfwTerminateGLX();
+=======
+#if defined(_GLFW_GLX)
+    _glfwTerminateGLX();
+#endif
+>>>>>>> Started addition of Vulkan support on Linux
 
     _glfwTerminateJoysticksLinux();
     _glfwTerminateThreadLocalStoragePOSIX();

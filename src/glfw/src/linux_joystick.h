@@ -46,6 +46,10 @@ typedef struct _GLFWjoystickLinux
     char*           path;
 } _GLFWjoystickLinux;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Started addition of Vulkan support on Linux
 // Linux-specific joystick API data
 //
 typedef struct _GLFWjoylistLinux
@@ -58,11 +62,19 @@ typedef struct _GLFWjoylistLinux
     regex_t         regex;
 #endif /*__linux__*/
 } _GLFWjoylistLinux;
+<<<<<<< HEAD
 
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 
 GLFWbool _glfwInitJoysticksLinux(void);
 void _glfwTerminateJoysticksLinux(void);
 
+<<<<<<< HEAD
 void _glfwPollJoystickEvents(void);
+=======
+GLFWbool _glfwInitJoysticksLinux(void);
+void _glfwTerminateJoysticksLinux(void);
+>>>>>>> Started addition of Vulkan support on Linux
 
 #endif // _glfw3_linux_joystick_h_

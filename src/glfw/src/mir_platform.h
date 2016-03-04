@@ -57,6 +57,13 @@ typedef VkBool32 (APIENTRY *PFN_vkGetPhysicalDeviceMirPresentationSupportKHR)(Vk
 #define _glfw_dlclose(handle) dlclose(handle)
 #define _glfw_dlsym(handle, name) dlsym(handle, name)
 
+<<<<<<< HEAD
+=======
+#define _glfw_dlopen(name) dlopen(name, RTLD_LAZY | RTLD_LOCAL)
+#define _glfw_dlclose(handle) dlclose(handle)
+#define _glfw_dlsym(handle, name) dlsym(handle, name)
+
+>>>>>>> Started addition of Vulkan support on Linux
 #define _GLFW_EGL_NATIVE_WINDOW  ((EGLNativeWindowType) window->mir.window)
 #define _GLFW_EGL_NATIVE_DISPLAY ((EGLNativeDisplayType) _glfw.mir.display)
 

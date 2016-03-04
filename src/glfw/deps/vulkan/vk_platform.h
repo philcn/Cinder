@@ -4,6 +4,7 @@
 /*
 ** Copyright (c) 2014-2015 The Khronos Group Inc.
 **
+<<<<<<< HEAD
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
 ** You may obtain a copy of the License at
@@ -20,6 +21,31 @@
 
 #ifndef VK_PLATFORM_H_
 #define VK_PLATFORM_H_
+=======
+** Permission is hereby granted, free of charge, to any person obtaining a
+** copy of this software and/or associated documentation files (the
+** "Materials"), to deal in the Materials without restriction, including
+** without limitation the rights to use, copy, modify, merge, publish,
+** distribute, sublicense, and/or sell copies of the Materials, and to
+** permit persons to whom the Materials are furnished to do so, subject to
+** the following conditions:
+**
+** The above copyright notice and this permission notice shall be included
+** in all copies or substantial portions of the Materials.
+**
+** THE MATERIALS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+** MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+** CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+** TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+** MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
+*/
+
+
+#ifndef __VK_PLATFORM_H__
+#define __VK_PLATFORM_H__
+>>>>>>> Started addition of Vulkan support on Linux
 
 #ifdef __cplusplus
 extern "C"
@@ -117,4 +143,8 @@ extern "C"
 #include <xcb/xcb.h>
 #endif
 
+<<<<<<< HEAD
 #endif
+=======
+#endif // __VK_PLATFORM_H__
+>>>>>>> Started addition of Vulkan support on Linux

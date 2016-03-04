@@ -73,9 +73,12 @@
 #define WGL_CONTEXT_RELEASE_BEHAVIOR_NONE_ARB 0
 #define WGL_CONTEXT_RELEASE_BEHAVIOR_FLUSH_ARB 0x2098
 
+<<<<<<< HEAD
 #define ERROR_INVALID_VERSION_ARB 0x2095
 #define ERROR_INVALID_PROFILE_ARB 0x2096
 
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 typedef BOOL (WINAPI * PFNWGLSWAPINTERVALEXTPROC)(int);
 typedef BOOL (WINAPI * PFNWGLGETPIXELFORMATATTRIBIVARBPROC)(HDC,int,int,UINT,const int*,int*);
 typedef const char* (WINAPI * PFNWGLGETEXTENSIONSSTRINGEXTPROC)(void);
@@ -88,6 +91,20 @@ typedef PROC (WINAPI * WGLGETPROCADDRESS_T)(LPCSTR);
 typedef HDC (WINAPI * WGLGETCURRENTDC_T)(void);
 typedef BOOL (WINAPI * WGLMAKECURRENT_T)(HDC,HGLRC);
 typedef BOOL (WINAPI * WGLSHARELISTS_T)(HGLRC,HGLRC);
+<<<<<<< HEAD
+=======
+
+// opengl32.dll function pointer typedefs
+#define wglCreateContext _glfw.wgl.CreateContext
+#define wglDeleteContext _glfw.wgl.DeleteContext
+#define wglGetProcAddress _glfw.wgl.GetProcAddress
+#define wglMakeCurrent _glfw.wgl.MakeCurrent
+#define wglShareLists _glfw.wgl.ShareLists
+
+#define _GLFW_RECREATION_NOT_NEEDED 0
+#define _GLFW_RECREATION_REQUIRED   1
+#define _GLFW_RECREATION_IMPOSSIBLE 2
+>>>>>>> Started addition of Vulkan support on Linux
 
 // opengl32.dll function pointer typedefs
 #define wglCreateContext _glfw.wgl.CreateContext
@@ -123,7 +140,10 @@ typedef struct _GLFWlibraryWGL
     WGLCREATECONTEXT_T                  CreateContext;
     WGLDELETECONTEXT_T                  DeleteContext;
     WGLGETPROCADDRESS_T                 GetProcAddress;
+<<<<<<< HEAD
     WGLGETCURRENTDC_T                   GetCurrentDC;
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     WGLMAKECURRENT_T                    MakeCurrent;
     WGLSHARELISTS_T                     ShareLists;
 
@@ -153,5 +173,12 @@ void _glfwTerminateWGL(void);
 GLFWbool _glfwCreateContextWGL(_GLFWwindow* window,
                                const _GLFWctxconfig* ctxconfig,
                                const _GLFWfbconfig* fbconfig);
+<<<<<<< HEAD
+=======
+void _glfwDestroyContextWGL(_GLFWwindow* window);
+int _glfwAnalyzeContextWGL(_GLFWwindow* window,
+                           const _GLFWctxconfig* ctxconfig,
+                           const _GLFWfbconfig* fbconfig);
+>>>>>>> Started addition of Vulkan support on Linux
 
 #endif // _glfw3_wgl_context_h_

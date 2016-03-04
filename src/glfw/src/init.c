@@ -130,10 +130,15 @@ GLFWAPI int glfwInit(void)
         return GLFW_FALSE;
     }
 
+    _glfwInitVulkan();
+
     _glfw.monitors = _glfwPlatformGetMonitors(&_glfw.monitorCount);
     _glfwInitialized = GLFW_TRUE;
+<<<<<<< HEAD
 
     _glfw.timerOffset = _glfwPlatformGetTimerValue();
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 
     // Not all window hints have zero as their default value
     glfwDefaultWindowHints();

@@ -85,6 +85,7 @@ static GLFWbool loadLibraries(void)
         GetProcAddress(_glfw.win32.user32.instance, "SetProcessDPIAware");
     _glfw.win32.user32.ChangeWindowMessageFilterEx = (CHANGEWINDOWMESSAGEFILTEREX_T)
         GetProcAddress(_glfw.win32.user32.instance, "ChangeWindowMessageFilterEx");
+<<<<<<< HEAD
 
     _glfw.win32.dinput8.instance = LoadLibraryA("dinput8.dll");
     if (_glfw.win32.dinput8.instance)
@@ -120,6 +121,9 @@ static GLFWbool loadLibraries(void)
         }
     }
 
+=======
+
+>>>>>>> Started addition of Vulkan support on Linux
     _glfw.win32.dwmapi.instance = LoadLibraryA("dwmapi.dll");
     if (_glfw.win32.dwmapi.instance)
     {
@@ -292,6 +296,7 @@ static void createKeyTables(void)
     _glfw.win32.publicKeys[0x11C] = GLFW_KEY_KP_ENTER;
     _glfw.win32.publicKeys[0x037] = GLFW_KEY_KP_MULTIPLY;
     _glfw.win32.publicKeys[0x04A] = GLFW_KEY_KP_SUBTRACT;
+<<<<<<< HEAD
 
     for (scancode = 0;  scancode < 512;  scancode++)
     {
@@ -300,6 +305,16 @@ static void createKeyTables(void)
     }
 }
 
+=======
+
+    for (scancode = 0;  scancode < 512;  scancode++)
+    {
+        if (_glfw.win32.publicKeys[scancode] > 0)
+            _glfw.win32.nativeKeys[_glfw.win32.publicKeys[scancode]] = scancode;
+    }
+}
+
+>>>>>>> Started addition of Vulkan support on Linux
 // Creates a dummy window for behind-the-scenes work
 //
 static HWND createHelperWindow(void)
@@ -309,7 +324,11 @@ static HWND createHelperWindow(void)
                                   L"GLFW helper window",
                                   WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
                                   0, 0, 1, 1,
+<<<<<<< HEAD
                                   HWND_MESSAGE, NULL,
+=======
+                                  NULL, NULL,
+>>>>>>> Started addition of Vulkan support on Linux
                                   GetModuleHandleW(NULL),
                                   NULL);
     if (!window)
@@ -319,6 +338,7 @@ static HWND createHelperWindow(void)
         return NULL;
     }
 
+<<<<<<< HEAD
     // HACK: The first call to ShowWindow is ignored if the parent process
     //       passed along a STARTUPINFO, so clear that flag with a no-op call
     ShowWindow(window, SW_HIDE);
@@ -338,6 +358,15 @@ static HWND createHelperWindow(void)
 
    return window;
 }
+=======
+    return window;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+//////                       GLFW internal API                      //////
+//////////////////////////////////////////////////////////////////////////
+>>>>>>> Started addition of Vulkan support on Linux
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -418,6 +447,7 @@ int _glfwPlatformInit(void)
 
     if (!_glfwRegisterWindowClassWin32())
         return GLFW_FALSE;
+<<<<<<< HEAD
 
     _glfw.win32.helperWindowHandle = createHelperWindow();
     if (!_glfw.win32.helperWindowHandle)
@@ -428,13 +458,38 @@ int _glfwPlatformInit(void)
     _glfwInitTimerWin32();
     _glfwInitJoysticksWin32();
 
+=======
+
+    _glfw.win32.helperWindow = createHelperWindow();
+    if (!_glfw.win32.helperWindow)
+        return GLFW_FALSE;
+
+    _glfwPlatformPollEvents();
+
+#if defined(_GLFW_WGL)
+    if (!_glfwInitWGL())
+        return GLFW_FALSE;
+#elif defined(_GLFW_EGL)
+    if (!_glfwInitEGL())
+        return GLFW_FALSE;
+#endif
+
+    _glfwInitTimerWin32();
+    _glfwInitJoysticksWin32();
+
+>>>>>>> Started addition of Vulkan support on Linux
     return GLFW_TRUE;
 }
 
 void _glfwPlatformTerminate(void)
 {
+<<<<<<< HEAD
     if (_glfw.win32.helperWindowHandle)
         DestroyWindow(_glfw.win32.helperWindowHandle);
+=======
+    if (_glfw.win32.helperWindow)
+        DestroyWindow(_glfw.win32.helperWindow);
+>>>>>>> Started addition of Vulkan support on Linux
 
     _glfwUnregisterWindowClassWin32();
 
@@ -445,8 +500,16 @@ void _glfwPlatformTerminate(void)
 
     free(_glfw.win32.clipboardString);
 
+<<<<<<< HEAD
     _glfwTerminateWGL();
     _glfwTerminateEGL();
+=======
+#if defined(_GLFW_WGL)
+    _glfwTerminateWGL();
+#elif defined(_GLFW_EGL)
+    _glfwTerminateEGL();
+#endif
+>>>>>>> Started addition of Vulkan support on Linux
 
     _glfwTerminateJoysticksWin32();
     _glfwTerminateThreadLocalStorageWin32();

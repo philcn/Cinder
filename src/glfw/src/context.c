@@ -34,18 +34,79 @@
 #include <stdio.h>
 
 
+<<<<<<< HEAD
+=======
+// Parses the client API version string and extracts the version number
+//
+static GLFWbool parseVersionString(int* api, int* major, int* minor, int* rev)
+{
+    int i;
+    _GLFWwindow* window;
+    const char* version;
+    const char* prefixes[] =
+    {
+        "OpenGL ES-CM ",
+        "OpenGL ES-CL ",
+        "OpenGL ES ",
+        NULL
+    };
+
+    *api = GLFW_OPENGL_API;
+
+    window = _glfwPlatformGetCurrentContext();
+
+    version = (const char*) window->context.GetString(GL_VERSION);
+    if (!version)
+    {
+        _glfwInputError(GLFW_PLATFORM_ERROR,
+                        "Failed to retrieve context version string");
+        return GLFW_FALSE;
+    }
+
+    for (i = 0;  prefixes[i];  i++)
+    {
+        const size_t length = strlen(prefixes[i]);
+
+        if (strncmp(version, prefixes[i], length) == 0)
+        {
+            version += length;
+            *api = GLFW_OPENGL_ES_API;
+            break;
+        }
+    }
+
+    if (!sscanf(version, "%d.%d.%d", major, minor, rev))
+    {
+        _glfwInputError(GLFW_PLATFORM_ERROR,
+                        "No version found in context version string");
+        return GLFW_FALSE;
+    }
+
+    return GLFW_TRUE;
+}
+
+
+>>>>>>> Started addition of Vulkan support on Linux
 //////////////////////////////////////////////////////////////////////////
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
 GLFWbool _glfwIsValidContextConfig(const _GLFWctxconfig* ctxconfig)
 {
+<<<<<<< HEAD
     if (ctxconfig->source != GLFW_NATIVE_CONTEXT_API &&
         ctxconfig->source != GLFW_EGL_CONTEXT_API)
     {
         _glfwInputError(GLFW_INVALID_ENUM,
                         "Invalid context creation API %i",
                         ctxconfig->source);
+=======
+    if (ctxconfig->api != GLFW_NO_API &&
+        ctxconfig->api != GLFW_OPENGL_API &&
+        ctxconfig->api != GLFW_OPENGL_ES_API)
+    {
+        _glfwInputError(GLFW_INVALID_ENUM, "Invalid client API");
+>>>>>>> Started addition of Vulkan support on Linux
         return GLFW_FALSE;
     }
 
@@ -84,8 +145,12 @@ GLFWbool _glfwIsValidContextConfig(const _GLFWctxconfig* ctxconfig)
                 ctxconfig->profile != GLFW_OPENGL_COMPAT_PROFILE)
             {
                 _glfwInputError(GLFW_INVALID_ENUM,
+<<<<<<< HEAD
                                 "Invalid OpenGL profile %i",
                                 ctxconfig->profile);
+=======
+                                "Invalid OpenGL profile");
+>>>>>>> Started addition of Vulkan support on Linux
                 return GLFW_FALSE;
             }
 
@@ -133,8 +198,12 @@ GLFWbool _glfwIsValidContextConfig(const _GLFWctxconfig* ctxconfig)
             ctxconfig->robustness != GLFW_LOSE_CONTEXT_ON_RESET)
         {
             _glfwInputError(GLFW_INVALID_ENUM,
+<<<<<<< HEAD
                             "Invalid context robustness mode %i",
                             ctxconfig->robustness);
+=======
+                            "Invalid context robustness mode");
+>>>>>>> Started addition of Vulkan support on Linux
             return GLFW_FALSE;
         }
     }
@@ -145,8 +214,12 @@ GLFWbool _glfwIsValidContextConfig(const _GLFWctxconfig* ctxconfig)
             ctxconfig->release != GLFW_RELEASE_BEHAVIOR_FLUSH)
         {
             _glfwInputError(GLFW_INVALID_ENUM,
+<<<<<<< HEAD
                             "Invalid context release behavior %i",
                             ctxconfig->release);
+=======
+                            "Invalid context release behavior");
+>>>>>>> Started addition of Vulkan support on Linux
             return GLFW_FALSE;
         }
     }
@@ -366,6 +439,7 @@ GLFWbool _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig)
     {
         const size_t length = strlen(prefixes[i]);
 
+<<<<<<< HEAD
         if (strncmp(version, prefixes[i], length) == 0)
         {
             version += length;
@@ -389,6 +463,12 @@ GLFWbool _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig)
             _glfwInputError(GLFW_PLATFORM_ERROR,
                             "No version found in OpenGL ES version string");
         }
+=======
+    window->context.GetIntegerv = (PFNGLGETINTEGERVPROC)
+        glfwGetProcAddress("glGetIntegerv");
+    window->context.GetString = (PFNGLGETSTRINGPROC)
+        glfwGetProcAddress("glGetString");
+>>>>>>> Started addition of Vulkan support on Linux
 
         return GLFW_FALSE;
     }
@@ -397,6 +477,7 @@ GLFWbool _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig)
         (window->context.major == ctxconfig->major &&
          window->context.minor < ctxconfig->minor))
     {
+<<<<<<< HEAD
         // The desired OpenGL version is greater than the actual version
         // This only happens if the machine lacks {GLX|WGL}_ARB_create_context
         // /and/ the user has requested an OpenGL version greater than 1.0
@@ -419,6 +500,8 @@ GLFWbool _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig)
                             window->context.major, window->context.minor);
         }
 
+=======
+>>>>>>> Started addition of Vulkan support on Linux
         return GLFW_FALSE;
     }
 
@@ -429,7 +512,11 @@ GLFWbool _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig)
         // users as early as possible that their build may be broken
 
         window->context.GetStringi = (PFNGLGETSTRINGIPROC)
+<<<<<<< HEAD
             window->context.getProcAddress("glGetStringi");
+=======
+            glfwGetProcAddress("glGetStringi");
+>>>>>>> Started addition of Vulkan support on Linux
         if (!window->context.GetStringi)
         {
             _glfwInputError(GLFW_PLATFORM_ERROR,
@@ -530,6 +617,7 @@ GLFWbool _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig)
         else if (behavior == GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH)
             window->context.release = GLFW_RELEASE_BEHAVIOR_FLUSH;
     }
+<<<<<<< HEAD
 
     // Clearing the front buffer to black to avoid garbage pixels left over from
     // previous uses of our bit of VRAM
@@ -538,6 +626,37 @@ GLFWbool _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig)
             window->context.getProcAddress("glClear");
         glClear(GL_COLOR_BUFFER_BIT);
         window->context.swapBuffers(window);
+=======
+
+    // Clearing the front buffer to black to avoid garbage pixels left over from
+    // previous uses of our bit of VRAM
+    {
+        PFNGLCLEARPROC glClear = (PFNGLCLEARPROC) glfwGetProcAddress("glClear");
+        glClear(GL_COLOR_BUFFER_BIT);
+        _glfwPlatformSwapBuffers(window);
+    }
+
+    return GLFW_TRUE;
+}
+
+GLFWbool _glfwIsValidContext(const _GLFWctxconfig* ctxconfig)
+{
+    _GLFWwindow* window = _glfwPlatformGetCurrentContext();
+
+    if (window->context.major < ctxconfig->major ||
+        (window->context.major == ctxconfig->major &&
+         window->context.minor < ctxconfig->minor))
+    {
+        // The desired OpenGL version is greater than the actual version
+        // This only happens if the machine lacks {GLX|WGL}_ARB_create_context
+        // /and/ the user has requested an OpenGL version greater than 1.0
+
+        // For API consistency, we emulate the behavior of the
+        // {GLX|WGL}_ARB_create_context extension and fail here
+
+        _glfwInputError(GLFW_VERSION_UNAVAILABLE, NULL);
+        return GLFW_FALSE;
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     return GLFW_TRUE;
@@ -577,16 +696,24 @@ GLFWbool _glfwStringInExtensionString(const char* string, const char* extensions
 GLFWAPI void glfwMakeContextCurrent(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
+<<<<<<< HEAD
     _GLFWwindow* previous = _glfwPlatformGetCurrentContext();
 
     _GLFW_REQUIRE_INIT();
 
     if (window && window->context.client == GLFW_NO_API)
+=======
+
+    _GLFW_REQUIRE_INIT();
+
+    if (window && window->context.api == GLFW_NO_API)
+>>>>>>> Started addition of Vulkan support on Linux
     {
         _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
         return;
     }
 
+<<<<<<< HEAD
     if (previous)
     {
         if (!window || window->context.source != previous->context.source)
@@ -595,6 +722,9 @@ GLFWAPI void glfwMakeContextCurrent(GLFWwindow* handle)
 
     if (window)
         window->context.makeCurrent(window);
+=======
+    _glfwPlatformMakeContextCurrent(window);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 GLFWAPI GLFWwindow* glfwGetCurrentContext(void)
@@ -610,13 +740,21 @@ GLFWAPI void glfwSwapBuffers(GLFWwindow* handle)
 
     _GLFW_REQUIRE_INIT();
 
+<<<<<<< HEAD
     if (window->context.client == GLFW_NO_API)
+=======
+    if (window->context.api == GLFW_NO_API)
+>>>>>>> Started addition of Vulkan support on Linux
     {
         _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
         return;
     }
 
+<<<<<<< HEAD
     window->context.swapBuffers(window);
+=======
+    _glfwPlatformSwapBuffers(window);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 GLFWAPI void glfwSwapInterval(int interval)
@@ -652,7 +790,11 @@ GLFWAPI int glfwExtensionSupported(const char* extension)
 
     if (*extension == '\0')
     {
+<<<<<<< HEAD
         _glfwInputError(GLFW_INVALID_VALUE, "Extension name is empty string");
+=======
+        _glfwInputError(GLFW_INVALID_VALUE, NULL);
+>>>>>>> Started addition of Vulkan support on Linux
         return GLFW_FALSE;
     }
 
@@ -672,7 +814,11 @@ GLFWAPI int glfwExtensionSupported(const char* extension)
             if (!en)
             {
                 _glfwInputError(GLFW_PLATFORM_ERROR,
+<<<<<<< HEAD
                                 "Extension string retrieval is broken");
+=======
+                                "Failed to retrieve extension string %i", i);
+>>>>>>> Started addition of Vulkan support on Linux
                 return GLFW_FALSE;
             }
 
@@ -689,7 +835,11 @@ GLFWAPI int glfwExtensionSupported(const char* extension)
         if (!extensions)
         {
             _glfwInputError(GLFW_PLATFORM_ERROR,
+<<<<<<< HEAD
                             "Extension string retrieval is broken");
+=======
+                            "Failed to retrieve extension string");
+>>>>>>> Started addition of Vulkan support on Linux
             return GLFW_FALSE;
         }
 
@@ -703,7 +853,10 @@ GLFWAPI int glfwExtensionSupported(const char* extension)
 
 GLFWAPI GLFWglproc glfwGetProcAddress(const char* procname)
 {
+<<<<<<< HEAD
     _GLFWwindow* window;
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     assert(procname != NULL);
 
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);

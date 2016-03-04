@@ -42,6 +42,7 @@ typedef struct _GLFWjoyobjectWin32
 //
 typedef struct _GLFWjoystickWin32
 {
+<<<<<<< HEAD:src/glfw/src/win32_joystick.h
     GLFWbool                present;
     float*                  axes;
     int                     axisCount;
@@ -53,12 +54,20 @@ typedef struct _GLFWjoystickWin32
     IDirectInputDevice8W*   device;
     DWORD                   index;
     GUID                    guid;
+=======
+    float           axes[6];
+    unsigned char   buttons[36]; // 32 buttons plus one hat
+    char*           name;
+>>>>>>> Started addition of Vulkan support on Linux:src/glfw/src/win32_joystick.h
 } _GLFWjoystickWin32;
 
 
 void _glfwInitJoysticksWin32(void);
 void _glfwTerminateJoysticksWin32(void);
+<<<<<<< HEAD:src/glfw/src/win32_joystick.h
 void _glfwDetectJoystickConnectionWin32(void);
 void _glfwDetectJoystickDisconnectionWin32(void);
+=======
+>>>>>>> Started addition of Vulkan support on Linux:src/glfw/src/win32_joystick.h
 
 #endif // _glfw3_win32_joystick_h_

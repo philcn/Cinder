@@ -2,7 +2,11 @@
 // GLFW 3.2 - www.glfw.org
 //------------------------------------------------------------------------
 // Copyright (c) 2002-2006 Marcus Geelnard
+<<<<<<< HEAD
 // Copyright (c) 2006-2016 Camilla Berglund <elmindreda@glfw.org>
+=======
+// Copyright (c) 2006-2010 Camilla Berglund <elmindreda@elmindreda.org>
+>>>>>>> Started addition of Vulkan support on Linux
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -36,6 +40,7 @@
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
 GLFWbool _glfwInitVulkan(void)
 {
     VkResult err;
@@ -43,18 +48,31 @@ GLFWbool _glfwInitVulkan(void)
     uint32_t i, count;
 
 #if !defined(_GLFW_VULKAN_STATIC)
+=======
+void _glfwInitVulkan(void)
+{
+    VkResult err;
+    VkExtensionProperties* ep;
+    unsigned int i, count;
+>>>>>>> Started addition of Vulkan support on Linux
 #if defined(_GLFW_WIN32)
     const char* name = "vulkan-1.dll";
 #else
     const char* name = "libvulkan.so.1";
 #endif
 
+<<<<<<< HEAD
     if (_glfw.vk.available)
         return GLFW_TRUE;
 
     _glfw.vk.handle = _glfw_dlopen(name);
     if (!_glfw.vk.handle)
         return GLFW_FALSE;
+=======
+    _glfw.vk.handle = _glfw_dlopen(name);
+    if (!_glfw.vk.handle)
+        return;
+>>>>>>> Started addition of Vulkan support on Linux
 
     _glfw.vk.GetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)
         _glfw_dlsym(_glfw.vk.handle, "vkGetInstanceProcAddr");
@@ -62,9 +80,13 @@ GLFWbool _glfwInitVulkan(void)
     {
         _glfwInputError(GLFW_API_UNAVAILABLE,
                         "Vulkan: Loader does not export vkGetInstanceProcAddr");
+<<<<<<< HEAD
 
         _glfwTerminateVulkan();
         return GLFW_FALSE;
+=======
+        return;
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     _glfw.vk.EnumerateInstanceExtensionProperties = (PFN_vkEnumerateInstanceExtensionProperties)
@@ -73,11 +95,16 @@ GLFWbool _glfwInitVulkan(void)
     {
         _glfwInputError(GLFW_API_UNAVAILABLE,
                         "Vulkan: Failed to retrieve vkEnumerateInstanceExtensionProperties");
+<<<<<<< HEAD
 
         _glfwTerminateVulkan();
         return GLFW_FALSE;
     }
 #endif // _GLFW_VULKAN_STATIC
+=======
+        return;
+    }
+>>>>>>> Started addition of Vulkan support on Linux
 
     err = vkEnumerateInstanceExtensionProperties(NULL, &count, NULL);
     if (err)
@@ -85,9 +112,13 @@ GLFWbool _glfwInitVulkan(void)
         _glfwInputError(GLFW_PLATFORM_ERROR,
                         "Vulkan: Failed to query instance extension count: %s",
                         _glfwGetVulkanResultString(err));
+<<<<<<< HEAD
 
         _glfwTerminateVulkan();
         return GLFW_FALSE;
+=======
+        return;
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     ep = calloc(count, sizeof(VkExtensionProperties));
@@ -100,8 +131,12 @@ GLFWbool _glfwInitVulkan(void)
                         _glfwGetVulkanResultString(err));
 
         free(ep);
+<<<<<<< HEAD
         _glfwTerminateVulkan();
         return GLFW_FALSE;
+=======
+        return;
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     for (i = 0;  i < count;  i++)
@@ -124,6 +159,7 @@ GLFWbool _glfwInitVulkan(void)
 
     _glfw.vk.available = GLFW_TRUE;
 
+<<<<<<< HEAD
     if (_glfw.vk.KHR_surface)
     {
         _glfw.vk.extensions =
@@ -131,11 +167,22 @@ GLFWbool _glfwInitVulkan(void)
     }
 
     return GLFW_TRUE;
+=======
+    if (!_glfw.vk.KHR_surface)
+        return;
+
+    _glfw.vk.extensions =
+        _glfwPlatformGetRequiredInstanceExtensions(&_glfw.vk.extensionCount);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwTerminateVulkan(void)
 {
+<<<<<<< HEAD
     uint32_t i;
+=======
+    unsigned int i;
+>>>>>>> Started addition of Vulkan support on Linux
 
     for (i = 0;  i < _glfw.vk.extensionCount;  i++)
         free(_glfw.vk.extensions[i]);
@@ -208,18 +255,31 @@ const char* _glfwGetVulkanResultString(VkResult result)
 GLFWAPI int glfwVulkanSupported(void)
 {
     _GLFW_REQUIRE_INIT_OR_RETURN(GLFW_FALSE);
+<<<<<<< HEAD
     return _glfwInitVulkan();
 }
 
 GLFWAPI const char** glfwGetRequiredInstanceExtensions(uint32_t* count)
+=======
+    return _glfw.vk.available;
+}
+
+GLFWAPI const char** glfwGetRequiredInstanceExtensions(unsigned int* count)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     *count = 0;
 
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
 
+<<<<<<< HEAD
     if (!_glfwInitVulkan())
     {
         _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: API not available");
+=======
+    if (!_glfw.vk.available)
+    {
+        _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: Loader not found");
+>>>>>>> Started addition of Vulkan support on Linux
         return NULL;
     }
 
@@ -234,9 +294,15 @@ GLFWAPI GLFWvkproc glfwGetInstanceProcAddress(VkInstance instance,
 
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
 
+<<<<<<< HEAD
     if (!_glfwInitVulkan())
     {
         _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: API not available");
+=======
+    if (!_glfw.vk.available)
+    {
+        _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: Loader not found");
+>>>>>>> Started addition of Vulkan support on Linux
         return NULL;
     }
 
@@ -253,9 +319,15 @@ GLFWAPI int glfwGetPhysicalDevicePresentationSupport(VkInstance instance,
 {
     _GLFW_REQUIRE_INIT_OR_RETURN(GLFW_FALSE);
 
+<<<<<<< HEAD
     if (!_glfwInitVulkan())
     {
         _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: API not available");
+=======
+    if (!_glfw.vk.available)
+    {
+        _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: Loader not found");
+>>>>>>> Started addition of Vulkan support on Linux
         return GLFW_FALSE;
     }
 
@@ -278,15 +350,26 @@ GLFWAPI VkResult glfwCreateWindowSurface(VkInstance instance,
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
     assert(window != NULL);
+<<<<<<< HEAD
     assert(surface != NULL);
 
+=======
+
+    assert(surface != NULL);
+>>>>>>> Started addition of Vulkan support on Linux
     *surface = VK_NULL_HANDLE;
 
     _GLFW_REQUIRE_INIT_OR_RETURN(VK_ERROR_INITIALIZATION_FAILED);
 
+<<<<<<< HEAD
     if (!_glfwInitVulkan())
     {
         _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: API not available");
+=======
+    if (!_glfw.vk.available)
+    {
+        _glfwInputError(GLFW_API_UNAVAILABLE, "Vulkan: Loader not found");
+>>>>>>> Started addition of Vulkan support on Linux
         return VK_ERROR_INITIALIZATION_FAILED;
     }
 

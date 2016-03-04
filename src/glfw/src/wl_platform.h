@@ -58,6 +58,16 @@ typedef VkBool32 (APIENTRY *PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR
 #define _glfw_dlclose(handle) dlclose(handle)
 #define _glfw_dlsym(handle, name) dlsym(handle, name)
 
+<<<<<<< HEAD
+=======
+#include "wayland-relative-pointer-unstable-v1-client-protocol.h"
+#include "wayland-pointer-constraints-unstable-v1-client-protocol.h"
+
+#define _glfw_dlopen(name) dlopen(name, RTLD_LAZY | RTLD_LOCAL)
+#define _glfw_dlclose(handle) dlclose(handle)
+#define _glfw_dlsym(handle, name) dlsym(handle, name)
+
+>>>>>>> Started addition of Vulkan support on Linux
 #define _GLFW_EGL_NATIVE_WINDOW         ((EGLNativeWindowType) window->wl.native)
 #define _GLFW_EGL_NATIVE_DISPLAY        ((EGLNativeDisplayType) _glfw.wl.display)
 
@@ -80,7 +90,10 @@ typedef struct _GLFWwindowWayland
 {
     int                         width, height;
     GLFWbool                    visible;
+<<<<<<< HEAD
     GLFWbool                    maximized;
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     struct wl_surface*          surface;
     struct wl_egl_window*       native;
     struct wl_shell_surface*    shell_surface;
@@ -88,6 +101,22 @@ typedef struct _GLFWwindowWayland
 
     _GLFWcursor*                currentCursor;
     double                      cursorPosX, cursorPosY;
+<<<<<<< HEAD
+=======
+
+    // We need to track the monitors the window spans on to calculate the
+    // optimal scaling factor.
+    int                         scale;
+    _GLFWmonitor**              monitors;
+    int                         monitorsCount;
+    int                         monitorsSize;
+
+    struct {
+        struct zwp_relative_pointer_v1*    relativePointer;
+        struct zwp_locked_pointer_v1*      lockedPointer;
+    } pointerLock;
+} _GLFWwindowWayland;
+>>>>>>> Started addition of Vulkan support on Linux
 
     char*                       title;
 

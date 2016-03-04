@@ -72,6 +72,7 @@ static DWORD getWindowExStyle(const _GLFWwindow* window)
     return style;
 }
 
+<<<<<<< HEAD
 // Returns the image whose area most closely matches the desired one
 //
 static const GLFWimage* chooseImage(int count, const GLFWimage* images,
@@ -213,11 +214,50 @@ static void applyAspectRatio(_GLFWwindow* window, int edge, RECT* area)
     }
     else if (edge == WMSZ_TOP || edge == WMSZ_BOTTOM)
     {
+=======
+// Translate client window size to full window size according to styles
+//
+static void getFullWindowSize(DWORD style, DWORD exStyle,
+                              int clientWidth, int clientHeight,
+                              int* fullWidth, int* fullHeight)
+{
+    RECT rect = { 0, 0, clientWidth, clientHeight };
+    AdjustWindowRectEx(&rect, style, FALSE, exStyle);
+    *fullWidth = rect.right - rect.left;
+    *fullHeight = rect.bottom - rect.top;
+}
+
+// Enforce the client rect aspect ratio based on which edge is being dragged
+//
+static void applyAspectRatio(_GLFWwindow* window, int edge, RECT* area)
+{
+    int xoff, yoff;
+    const float ratio = (float) window->win32.numer /
+                        (float) window->win32.denom;
+
+    getFullWindowSize(getWindowStyle(window), getWindowExStyle(window),
+                      0, 0, &xoff, &yoff);
+
+    if (edge == WMSZ_LEFT  || edge == WMSZ_BOTTOMLEFT ||
+        edge == WMSZ_RIGHT || edge == WMSZ_BOTTOMRIGHT)
+    {
+        area->bottom = area->top + yoff +
+            (int) ((area->right - area->left - xoff) / ratio);
+    }
+    else if (edge == WMSZ_TOPLEFT || edge == WMSZ_TOPRIGHT)
+    {
+        area->top = area->bottom - yoff -
+            (int) ((area->right - area->left - xoff) / ratio);
+    }
+    else if (edge == WMSZ_TOP || edge == WMSZ_BOTTOM)
+    {
+>>>>>>> Started addition of Vulkan support on Linux
         area->right = area->left + xoff +
             (int) ((area->bottom - area->top - yoff) * ratio);
     }
 }
 
+<<<<<<< HEAD
 // Centers the cursor over the window client area
 //
 static void centerCursor(_GLFWwindow* window)
@@ -276,6 +316,17 @@ static void updateClipRect(_GLFWwindow* window)
     }
     else
         ClipCursor(NULL);
+=======
+// Updates the cursor clip rect
+//
+static void updateClipRect(_GLFWwindow* window)
+{
+    RECT clipRect;
+    GetClientRect(window->win32.handle, &clipRect);
+    ClientToScreen(window->win32.handle, (POINT*) &clipRect.left);
+    ClientToScreen(window->win32.handle, (POINT*) &clipRect.right);
+    ClipCursor(&clipRect);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 // Translates a GLFW standard cursor to a resource ID
@@ -390,7 +441,11 @@ static int translateKey(WPARAM wParam, LPARAM lParam)
 
 // Make the specified window and its video mode active on its monitor
 //
+<<<<<<< HEAD
 static GLFWbool acquireMonitor(_GLFWwindow* window)
+=======
+static GLFWbool enterFullscreenMode(_GLFWwindow* window)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     GLFWvidmode mode;
     GLFWbool status;
@@ -413,10 +468,13 @@ static GLFWbool acquireMonitor(_GLFWwindow* window)
 //
 static void releaseMonitor(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     if (window->monitor->window != window)
         return;
 
     _glfwInputMonitorWindowChange(window->monitor, NULL);
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     _glfwRestoreVideoModeWin32(window->monitor);
 }
 
@@ -425,13 +483,18 @@ static void releaseMonitor(_GLFWwindow* window)
 static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
                                    WPARAM wParam, LPARAM lParam)
 {
+<<<<<<< HEAD
     _GLFWwindow* window = GetPropW(hWnd, L"GLFW");
+=======
+    _GLFWwindow* window = (_GLFWwindow*) GetWindowLongPtrW(hWnd, 0);
+>>>>>>> Started addition of Vulkan support on Linux
     if (!window)
     {
         // This is the message handling for the hidden helper window
 
         switch (uMsg)
         {
+<<<<<<< HEAD
             case WM_DEVICECHANGE:
             {
                 if (wParam == DBT_DEVNODES_CHANGED)
@@ -460,6 +523,20 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
 
                 break;
             }
+=======
+            case WM_NCCREATE:
+            {
+                CREATESTRUCTW* cs = (CREATESTRUCTW*) lParam;
+                SetWindowLongPtrW(hWnd, 0, (LONG_PTR) cs->lpCreateParams);
+                break;
+            }
+
+            case WM_DISPLAYCHANGE:
+            {
+                _glfwInputMonitorChange();
+                return 0;
+            }
+>>>>>>> Started addition of Vulkan support on Linux
         }
 
         return DefWindowProcW(hWnd, uMsg, wParam, lParam);
@@ -469,11 +546,18 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
     {
         case WM_SETFOCUS:
         {
+<<<<<<< HEAD
             _glfwInputWindowFocus(window, GLFW_TRUE);
 
             if (window->cursorMode == GLFW_CURSOR_DISABLED)
                 _glfwPlatformSetCursorMode(window, GLFW_CURSOR_DISABLED);
 
+=======
+            if (window->cursorMode == GLFW_CURSOR_DISABLED)
+                _glfwPlatformSetCursorMode(window, GLFW_CURSOR_DISABLED);
+
+            _glfwInputWindowFocus(window, GLFW_TRUE);
+>>>>>>> Started addition of Vulkan support on Linux
             return 0;
         }
 
@@ -712,13 +796,25 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
             {
                 window->win32.iconified = GLFW_TRUE;
                 if (window->monitor)
+<<<<<<< HEAD
                     releaseMonitor(window);
+=======
+                    leaveFullscreenMode(window);
+
+                _glfwInputWindowIconify(window, GLFW_TRUE);
+>>>>>>> Started addition of Vulkan support on Linux
             }
             else if (restored)
             {
                 window->win32.iconified = GLFW_FALSE;
                 if (window->monitor)
+<<<<<<< HEAD
                     acquireMonitor(window);
+=======
+                    enterFullscreenMode(window);
+
+                _glfwInputWindowIconify(window, GLFW_FALSE);
+>>>>>>> Started addition of Vulkan support on Linux
             }
 
             return 0;
@@ -739,8 +835,13 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
 
         case WM_SIZING:
         {
+<<<<<<< HEAD
             if (window->numer == GLFW_DONT_CARE ||
                 window->denom == GLFW_DONT_CARE)
+=======
+            if (window->win32.numer == GLFW_DONT_CARE ||
+                window->win32.denom == GLFW_DONT_CARE)
+>>>>>>> Started addition of Vulkan support on Linux
             {
                 break;
             }
@@ -754,6 +855,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
             int xoff, yoff;
             MINMAXINFO* mmi = (MINMAXINFO*) lParam;
 
+<<<<<<< HEAD
             if (window->monitor)
                 break;
 
@@ -772,6 +874,23 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
             {
                 mmi->ptMaxTrackSize.x = window->maxwidth + xoff;
                 mmi->ptMaxTrackSize.y = window->maxheight + yoff;
+=======
+            getFullWindowSize(getWindowStyle(window), getWindowExStyle(window),
+                              0, 0, &xoff, &yoff);
+
+            if (window->win32.minwidth != GLFW_DONT_CARE &&
+                window->win32.minheight != GLFW_DONT_CARE)
+            {
+                mmi->ptMinTrackSize.x = window->win32.minwidth + xoff;
+                mmi->ptMinTrackSize.y = window->win32.minheight + yoff;
+            }
+
+            if (window->win32.maxwidth != GLFW_DONT_CARE &&
+                window->win32.maxheight != GLFW_DONT_CARE)
+            {
+                mmi->ptMaxTrackSize.x = window->win32.maxwidth + xoff;
+                mmi->ptMaxTrackSize.y = window->win32.maxheight + yoff;
+>>>>>>> Started addition of Vulkan support on Linux
             }
 
             return 0;
@@ -850,10 +969,16 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
     return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
 
+<<<<<<< HEAD
 // Creates the GLFW window
 //
 static int createNativeWindow(_GLFWwindow* window,
                               const _GLFWwndconfig* wndconfig)
+=======
+// Creates the GLFW window and rendering context
+//
+static int createWindow(_GLFWwindow* window, const _GLFWwndconfig* wndconfig)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     int xpos, ypos, fullWidth, fullHeight;
     WCHAR* wideTitle;
@@ -924,9 +1049,41 @@ static int createNativeWindow(_GLFWwindow* window,
                                           WM_COPYGLOBALDATA, MSGFLT_ALLOW, NULL);
     }
 
+<<<<<<< HEAD
     DragAcceptFiles(window->win32.handle, TRUE);
 
     return GLFW_TRUE;
+=======
+    if (wndconfig->floating && !wndconfig->monitor)
+    {
+        SetWindowPos(window->win32.handle,
+                     HWND_TOPMOST,
+                     0, 0, 0, 0,
+                     SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
+    }
+
+    DragAcceptFiles(window->win32.handle, TRUE);
+
+    window->win32.minwidth  = GLFW_DONT_CARE;
+    window->win32.minheight = GLFW_DONT_CARE;
+    window->win32.maxwidth  = GLFW_DONT_CARE;
+    window->win32.maxheight = GLFW_DONT_CARE;
+    window->win32.numer     = GLFW_DONT_CARE;
+    window->win32.denom     = GLFW_DONT_CARE;
+
+    return GLFW_TRUE;
+}
+
+// Destroys the GLFW window and rendering context
+//
+static void destroyWindow(_GLFWwindow* window)
+{
+    if (window->win32.handle)
+    {
+        DestroyWindow(window->win32.handle);
+        window->win32.handle = NULL;
+    }
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 
@@ -944,6 +1101,10 @@ GLFWbool _glfwRegisterWindowClassWin32(void)
     wc.cbSize        = sizeof(wc);
     wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
     wc.lpfnWndProc   = (WNDPROC) windowProc;
+<<<<<<< HEAD
+=======
+    wc.cbWndExtra    = sizeof(void*) + sizeof(int); // Make room for one pointer
+>>>>>>> Started addition of Vulkan support on Linux
     wc.hInstance     = GetModuleHandleW(NULL);
     wc.hCursor       = LoadCursorW(NULL, IDC_ARROW);
     wc.lpszClassName = _GLFW_WNDCLASSNAME;
@@ -987,6 +1148,7 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
                               const _GLFWctxconfig* ctxconfig,
                               const _GLFWfbconfig* fbconfig)
 {
+<<<<<<< HEAD
     if (!createNativeWindow(window, wndconfig))
         return GLFW_FALSE;
 
@@ -995,10 +1157,59 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
         if (ctxconfig->source == GLFW_NATIVE_CONTEXT_API)
         {
             if (!_glfwInitWGL())
+=======
+    int status;
+
+    if (!createWindow(window, wndconfig))
+        return GLFW_FALSE;
+
+    if (ctxconfig->api != GLFW_NO_API)
+    {
+#if defined(_GLFW_WGL)
+        if (!_glfwCreateContextWGL(window, ctxconfig, fbconfig))
+            return GLFW_FALSE;
+
+        status = _glfwAnalyzeContextWGL(window, ctxconfig, fbconfig);
+
+        if (status == _GLFW_RECREATION_IMPOSSIBLE)
+            return GLFW_FALSE;
+
+        if (status == _GLFW_RECREATION_REQUIRED)
+        {
+            // Some window hints require us to re-create the context using WGL
+            // extensions retrieved through the current context, as we cannot
+            // check for WGL extensions or retrieve WGL entry points before we
+            // have a current context (actually until we have implicitly loaded
+            // the vendor ICD)
+
+            // Yes, this is strange, and yes, this is the proper way on WGL
+
+            // As Windows only allows you to set the pixel format once for
+            // a window, we need to destroy the current window and create a new
+            // one to be able to use the new pixel format
+
+            // Technically, it may be possible to keep the old window around if
+            // we're just creating an OpenGL 3.0+ context with the same pixel
+            // format, but it's not worth the added code complexity
+
+            // First we clear the current context (the one we just created)
+            // This is usually done by glfwDestroyWindow, but as we're not doing
+            // full GLFW window destruction, it's duplicated here
+            _glfwPlatformMakeContextCurrent(NULL);
+
+            // Next destroy the Win32 window and WGL context (without resetting
+            // or destroying the GLFW window object)
+            _glfwDestroyContextWGL(window);
+            destroyWindow(window);
+
+            // ...and then create them again, this time with better APIs
+            if (!createWindow(window, wndconfig))
+>>>>>>> Started addition of Vulkan support on Linux
                 return GLFW_FALSE;
             if (!_glfwCreateContextWGL(window, ctxconfig, fbconfig))
                 return GLFW_FALSE;
         }
+<<<<<<< HEAD
         else
         {
             if (!_glfwInitEGL())
@@ -1006,16 +1217,27 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
             if (!_glfwCreateContextEGL(window, ctxconfig, fbconfig))
                 return GLFW_FALSE;
         }
+=======
+#elif defined(_GLFW_EGL)
+        if (!_glfwCreateContextEGL(window, ctxconfig, fbconfig))
+            return GLFW_FALSE;
+#endif
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     if (window->monitor)
     {
         _glfwPlatformShowWindow(window);
+<<<<<<< HEAD
         _glfwPlatformFocusWindow(window);
         if (!acquireMonitor(window))
             return GLFW_FALSE;
 
         centerCursor(window);
+=======
+        if (!enterFullscreenMode(window))
+            return GLFW_FALSE;
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     return GLFW_TRUE;
@@ -1026,6 +1248,7 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
     if (window->monitor)
         releaseMonitor(window);
 
+<<<<<<< HEAD
     if (window->context.destroy)
         window->context.destroy(window);
 
@@ -1044,6 +1267,18 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
 
     if (window->win32.smallIcon)
         DestroyIcon(window->win32.smallIcon);
+=======
+    if (window->context.api != GLFW_NO_API)
+    {
+#if defined(_GLFW_WGL)
+        _glfwDestroyContextWGL(window);
+#elif defined(_GLFW_EGL)
+        _glfwDestroyContextEGL(window);
+#endif
+    }
+
+    destroyWindow(window);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwPlatformSetWindowTitle(_GLFWwindow* window, const char* title)
@@ -1139,9 +1374,16 @@ void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
     }
     else
     {
+<<<<<<< HEAD
         RECT rect = { 0, 0, width, height };
         AdjustWindowRectEx(&rect, getWindowStyle(window),
                            FALSE, getWindowExStyle(window));
+=======
+        int fullWidth, fullHeight;
+        getFullWindowSize(getWindowStyle(window), getWindowExStyle(window),
+                          width, height, &fullWidth, &fullHeight);
+
+>>>>>>> Started addition of Vulkan support on Linux
         SetWindowPos(window->win32.handle, HWND_TOP,
                      0, 0, rect.right - rect.left, rect.bottom - rect.top,
                      SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOZORDER);
@@ -1154,6 +1396,14 @@ void _glfwPlatformSetWindowSizeLimits(_GLFWwindow* window,
 {
     RECT area;
 
+<<<<<<< HEAD
+=======
+    window->win32.minwidth  = minwidth;
+    window->win32.minheight = minheight;
+    window->win32.maxwidth  = maxwidth;
+    window->win32.maxheight = maxheight;
+
+>>>>>>> Started addition of Vulkan support on Linux
     if ((minwidth == GLFW_DONT_CARE || minheight == GLFW_DONT_CARE) &&
         (maxwidth == GLFW_DONT_CARE || maxheight == GLFW_DONT_CARE))
     {
@@ -1171,6 +1421,12 @@ void _glfwPlatformSetWindowAspectRatio(_GLFWwindow* window, int numer, int denom
 {
     RECT area;
 
+<<<<<<< HEAD
+=======
+    window->win32.numer = numer;
+    window->win32.denom = denom;
+
+>>>>>>> Started addition of Vulkan support on Linux
     if (numer == GLFW_DONT_CARE || denom == GLFW_DONT_CARE)
         return;
 
@@ -1241,6 +1497,7 @@ void _glfwPlatformFocusWindow(_GLFWwindow* window)
     SetFocus(window->win32.handle);
 }
 
+<<<<<<< HEAD
 void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
                                    _GLFWmonitor* monitor,
                                    int xpos, int ypos,
@@ -1327,6 +1584,8 @@ void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
     }
 }
 
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 int _glfwPlatformWindowFocused(_GLFWwindow* window)
 {
     return window->win32.handle == GetActiveWindow();
@@ -1350,8 +1609,11 @@ int _glfwPlatformWindowMaximized(_GLFWwindow* window)
 void _glfwPlatformPollEvents(void)
 {
     MSG msg;
+<<<<<<< HEAD
     HWND handle;
     _GLFWwindow* window;
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 
     while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
     {
@@ -1361,7 +1623,7 @@ void _glfwPlatformPollEvents(void)
             // While GLFW does not itself post WM_QUIT, other processes may post
             // it to this one, for example Task Manager
 
-            window = _glfw.windowListHead;
+            _GLFWwindow* window = _glfw.windowListHead;
             while (window)
             {
                 _glfwInputWindowCloseRequest(window);
@@ -1375,9 +1637,15 @@ void _glfwPlatformPollEvents(void)
         }
     }
 
+<<<<<<< HEAD
     handle = GetActiveWindow();
     if (handle)
+=======
+    if (_glfw.cursorWindow)
+>>>>>>> Started addition of Vulkan support on Linux
     {
+        _GLFWwindow* window = _glfw.cursorWindow;
+
         // LSHIFT/RSHIFT fixup (keys tend to "stick" without this fix)
         // This is the only async event handling in GLFW, but it solves some
         // nasty problems
@@ -1465,6 +1733,7 @@ void _glfwPlatformSetCursorPos(_GLFWwindow* window, double xpos, double ypos)
 
 void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
 {
+<<<<<<< HEAD
     if (mode == GLFW_CURSOR_DISABLED)
     {
         _glfw.win32.disabledCursorWindow = window;
@@ -1485,6 +1754,29 @@ void _glfwPlatformSetCursorMode(_GLFWwindow* window, int mode)
 
     if (cursorInClientArea(window))
         updateCursorImage(window);
+=======
+    POINT pos;
+
+    if (mode == GLFW_CURSOR_DISABLED)
+        updateClipRect(window);
+    else
+        ClipCursor(NULL);
+
+    if (!GetCursorPos(&pos))
+        return;
+
+    if (WindowFromPoint(pos) != window->win32.handle)
+        return;
+
+    if (mode == GLFW_CURSOR_NORMAL)
+    {
+        if (window->cursor)
+            SetCursor(window->cursor->win32.handle);
+        else
+            SetCursor(LoadCursorW(NULL, IDC_ARROW));
+    }
+    else
+        SetCursor(NULL);
 }
 
 const char* _glfwPlatformGetKeyName(int key, int scancode)
@@ -1499,6 +1791,43 @@ const char* _glfwPlatformGetKeyName(int key, int scancode)
 
     if (!GetKeyNameTextW(scancode << 16, name, sizeof(name) / sizeof(WCHAR)))
         return NULL;
+
+    if (!WideCharToMultiByte(CP_UTF8, 0, name, -1,
+                             _glfw.win32.keyName,
+                             sizeof(_glfw.win32.keyName),
+                             NULL, NULL))
+    {
+        return NULL;
+    }
+
+    return _glfw.win32.keyName;
+>>>>>>> Started addition of Vulkan support on Linux
+}
+
+const char* _glfwPlatformGetKeyName(int key, int scancode)
+{
+    WCHAR name[16];
+
+    if (key != GLFW_KEY_UNKNOWN)
+        scancode = _glfw.win32.nativeKeys[key];
+
+<<<<<<< HEAD
+    if (!_glfwIsPrintable(_glfw.win32.publicKeys[scancode]))
+        return NULL;
+
+    if (!GetKeyNameTextW(scancode << 16, name, sizeof(name) / sizeof(WCHAR)))
+        return NULL;
+=======
+    if (!bitmap)
+        return GLFW_FALSE;
+
+    mask = CreateBitmap(image->width, image->height, 1, 1, NULL);
+    if (!mask)
+    {
+        DeleteObject(bitmap);
+        return GLFW_FALSE;
+    }
+>>>>>>> Started addition of Vulkan support on Linux
 
     if (!WideCharToMultiByte(CP_UTF8, 0, name, -1,
                              _glfw.win32.keyName,
@@ -1554,8 +1883,13 @@ void _glfwPlatformSetClipboardString(_GLFWwindow* window, const char* string)
     HANDLE object;
     WCHAR* buffer;
 
+<<<<<<< HEAD
     characterCount = MultiByteToWideChar(CP_UTF8, 0, string, -1, NULL, 0);
     if (!characterCount)
+=======
+    wideString = _glfwCreateWideStringFromUTF8Win32(string);
+    if (!wideString)
+>>>>>>> Started addition of Vulkan support on Linux
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
                         "Win32: Failed to convert clipboard string to UTF-16");
@@ -1579,10 +1913,14 @@ void _glfwPlatformSetClipboardString(_GLFWwindow* window, const char* string)
         return;
     }
 
+<<<<<<< HEAD
     MultiByteToWideChar(CP_UTF8, 0, string, -1, buffer, characterCount);
     GlobalUnlock(object);
 
     if (!OpenClipboard(_glfw.win32.helperWindowHandle))
+=======
+    if (!OpenClipboard(_glfw.win32.helperWindow))
+>>>>>>> Started addition of Vulkan support on Linux
     {
         GlobalFree(object);
 
@@ -1600,7 +1938,11 @@ const char* _glfwPlatformGetClipboardString(_GLFWwindow* window)
     HANDLE object;
     WCHAR* buffer;
 
+<<<<<<< HEAD
     if (!OpenClipboard(_glfw.win32.helperWindowHandle))
+=======
+    if (!OpenClipboard(_glfw.win32.helperWindow))
+>>>>>>> Started addition of Vulkan support on Linux
     {
         _glfwInputError(GLFW_PLATFORM_ERROR, "Win32: Failed to open clipboard");
         return NULL;
@@ -1627,7 +1969,11 @@ const char* _glfwPlatformGetClipboardString(_GLFWwindow* window)
 
     free(_glfw.win32.clipboardString);
     _glfw.win32.clipboardString =
+<<<<<<< HEAD
         _glfwCreateUTF8FromWideStringWin32(buffer);
+=======
+        _glfwCreateUTF8FromWideStringWin32(GlobalLock(stringHandle));
+>>>>>>> Started addition of Vulkan support on Linux
 
     GlobalUnlock(object);
     CloseClipboard();
@@ -1642,7 +1988,11 @@ const char* _glfwPlatformGetClipboardString(_GLFWwindow* window)
     return _glfw.win32.clipboardString;
 }
 
+<<<<<<< HEAD
 char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
+=======
+char** _glfwPlatformGetRequiredInstanceExtensions(unsigned int* count)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     char** extensions;
 
@@ -1661,7 +2011,11 @@ char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
 
 int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance,
                                                       VkPhysicalDevice device,
+<<<<<<< HEAD
                                                       uint32_t queuefamily)
+=======
+                                                      unsigned int queuefamily)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHR =
         (PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR)

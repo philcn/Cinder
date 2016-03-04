@@ -174,6 +174,7 @@ static const struct wl_surface_listener surfaceListener = {
     handleLeave
 };
 
+<<<<<<< HEAD
 // Makes the surface considered as XRGB instead of ARGB.
 static void setOpaqueRegion(_GLFWwindow* window)
 {
@@ -189,6 +190,8 @@ static void setOpaqueRegion(_GLFWwindow* window)
     wl_region_destroy(region);
 }
 
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 static GLFWbool createSurface(_GLFWwindow* window,
                               const _GLFWwndconfig* wndconfig)
 {
@@ -229,6 +232,7 @@ static GLFWbool createShellSurface(_GLFWwindow* window)
                                   &shellSurfaceListener,
                                   window);
 
+<<<<<<< HEAD
     if (window->wl.title)
         wl_shell_surface_set_title(window->wl.shell_surface, window->wl.title);
 
@@ -249,6 +253,12 @@ static GLFWbool createShellSurface(_GLFWwindow* window)
         wl_shell_surface_set_toplevel(window->wl.shell_surface);
     }
 
+=======
+    window->wl.width = wndconfig->width;
+    window->wl.height = wndconfig->height;
+    window->wl.scale = 1;
+
+>>>>>>> Started addition of Vulkan support on Linux
     return GLFW_TRUE;
 }
 
@@ -390,6 +400,15 @@ int _glfwPlatformCreateWindow(_GLFWwindow* window,
 {
     if (!createSurface(window, wndconfig))
         return GLFW_FALSE;
+<<<<<<< HEAD
+=======
+
+    if (ctxconfig->api != GLFW_NO_API)
+    {
+        if (!_glfwCreateContextEGL(window, ctxconfig, fbconfig))
+            return GLFW_FALSE;
+    }
+>>>>>>> Started addition of Vulkan support on Linux
 
     if (ctxconfig->client != GLFW_NO_API)
     {
@@ -437,8 +456,12 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
         _glfwInputWindowFocus(window, GLFW_FALSE);
     }
 
+<<<<<<< HEAD
     if (window->context.destroy)
         window->context.destroy(window);
+=======
+    _glfwDestroyContextEGL(window);
+>>>>>>> Started addition of Vulkan support on Linux
 
     if (window->wl.native)
         wl_egl_window_destroy(window->wl.native);
@@ -449,7 +472,10 @@ void _glfwPlatformDestroyWindow(_GLFWwindow* window)
     if (window->wl.surface)
         wl_surface_destroy(window->wl.surface);
 
+<<<<<<< HEAD
     free(window->wl.title);
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     free(window->wl.monitors);
 }
 
@@ -501,7 +527,10 @@ void _glfwPlatformSetWindowSize(_GLFWwindow* window, int width, int height)
     window->wl.width = width;
     window->wl.height = height;
     wl_egl_window_resize(window->wl.native, scaledWidth, scaledHeight, 0, 0);
+<<<<<<< HEAD
     setOpaqueRegion(window);
+=======
+>>>>>>> Started addition of Vulkan support on Linux
     _glfwInputFramebufferSize(window, scaledWidth, scaledHeight);
 }
 
@@ -509,14 +538,24 @@ void _glfwPlatformSetWindowSizeLimits(_GLFWwindow* window,
                                       int minwidth, int minheight,
                                       int maxwidth, int maxheight)
 {
+<<<<<<< HEAD
     // TODO: find out how to trigger a resize.
     // The actual limits are checked in the wl_shell_surface::configure handler.
+=======
+    // TODO
+    fprintf(stderr, "_glfwPlatformSetWindowSizeLimits not implemented yet\n");
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwPlatformSetWindowAspectRatio(_GLFWwindow* window, int numer, int denom)
 {
+<<<<<<< HEAD
     // TODO: find out how to trigger a resize.
     // The actual limits are checked in the wl_shell_surface::configure handler.
+=======
+    // TODO
+    fprintf(stderr, "_glfwPlatformSetWindowAspectRatio not implemented yet\n");
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwPlatformGetFramebufferSize(_GLFWwindow* window, int* width, int* height)
@@ -555,6 +594,7 @@ void _glfwPlatformRestoreWindow(_GLFWwindow* window)
 
 void _glfwPlatformMaximizeWindow(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     if (!window->monitor && !window->wl.maximized)
     {
         if (window->wl.shell_surface)
@@ -564,16 +604,24 @@ void _glfwPlatformMaximizeWindow(_GLFWwindow* window)
         }
         window->wl.maximized = GLFW_TRUE;
     }
+=======
+    // TODO
+    fprintf(stderr, "_glfwPlatformMaximizeWindow not implemented yet\n");
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwPlatformShowWindow(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     if (!window->monitor)
     {
         if (!window->wl.shell_surface)
             createShellSurface(window);
         window->wl.visible = GLFW_TRUE;
     }
+=======
+    wl_shell_surface_set_toplevel(window->wl.shell_surface);
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwPlatformHideWindow(_GLFWwindow* window)
@@ -613,25 +661,50 @@ void _glfwPlatformSetWindowMonitor(_GLFWwindow* window,
     _glfwInputWindowMonitorChange(window, monitor);
 }
 
+void _glfwPlatformFocusWindow(_GLFWwindow* window)
+{
+    // TODO
+    fprintf(stderr, "_glfwPlatformFocusWindow not implemented yet\n");
+}
+
 int _glfwPlatformWindowFocused(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     return _glfw.wl.keyboardFocus == window;
+=======
+    // TODO
+    return GLFW_FALSE;
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 int _glfwPlatformWindowIconified(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     // TODO: move to xdg_shell, wl_shell doesn't have any iconified concept.
+=======
+    // TODO
+>>>>>>> Started addition of Vulkan support on Linux
     return GLFW_FALSE;
 }
 
 int _glfwPlatformWindowVisible(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     return window->wl.visible;
+=======
+    // TODO
+    return GLFW_FALSE;
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 int _glfwPlatformWindowMaximized(_GLFWwindow* window)
 {
+<<<<<<< HEAD
     return window->wl.maximized;
+=======
+    // TODO
+    return GLFW_FALSE;
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 void _glfwPlatformPollEvents(void)
@@ -786,9 +859,15 @@ static void handleRelativeMotion(void* data,
     if (window->cursorMode != GLFW_CURSOR_DISABLED)
         return;
 
+<<<<<<< HEAD
     _glfwInputCursorPos(window,
                         window->virtualCursorPosX + wl_fixed_to_double(dxUnaccel),
                         window->virtualCursorPosY + wl_fixed_to_double(dyUnaccel));
+=======
+    _glfwInputCursorMotion(window,
+                           wl_fixed_to_double(dxUnaccel),
+                           wl_fixed_to_double(dyUnaccel));
+>>>>>>> Started addition of Vulkan support on Linux
 }
 
 static const struct zwp_relative_pointer_v1_listener relativePointerListener = {
@@ -960,7 +1039,11 @@ const char* _glfwPlatformGetClipboardString(_GLFWwindow* window)
     return NULL;
 }
 
+<<<<<<< HEAD
 char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
+=======
+char** _glfwPlatformGetRequiredInstanceExtensions(unsigned int* count)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     char** extensions;
 
@@ -979,7 +1062,11 @@ char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count)
 
 int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance,
                                                       VkPhysicalDevice device,
+<<<<<<< HEAD
                                                       uint32_t queuefamily)
+=======
+                                                      unsigned int queuefamily)
+>>>>>>> Started addition of Vulkan support on Linux
 {
     PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHR =
         (PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR)

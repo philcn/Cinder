@@ -28,13 +28,110 @@
 #include "internal.h"
 
 #include <assert.h>
+<<<<<<< HEAD
 #include <float.h>
+=======
+>>>>>>> Started addition of Vulkan support on Linux
 #include <stdlib.h>
 
 // Internal key state used for sticky keys
 #define _GLFW_STICK 3
 
 
+<<<<<<< HEAD
+=======
+// Sets the cursor mode for the specified window
+//
+static void setCursorMode(_GLFWwindow* window, int newMode)
+{
+    const int oldMode = window->cursorMode;
+
+    if (newMode != GLFW_CURSOR_NORMAL &&
+        newMode != GLFW_CURSOR_HIDDEN &&
+        newMode != GLFW_CURSOR_DISABLED)
+    {
+        _glfwInputError(GLFW_INVALID_ENUM, "Invalid cursor mode");
+        return;
+    }
+
+    if (oldMode == newMode)
+        return;
+
+    window->cursorMode = newMode;
+
+    if (_glfw.cursorWindow == window)
+    {
+        if (oldMode == GLFW_CURSOR_DISABLED)
+        {
+            _glfwPlatformSetCursorPos(window,
+                                      _glfw.cursorPosX,
+                                      _glfw.cursorPosY);
+        }
+        else if (newMode == GLFW_CURSOR_DISABLED)
+        {
+            int width, height;
+
+            _glfwPlatformGetCursorPos(window,
+                                      &_glfw.cursorPosX,
+                                      &_glfw.cursorPosY);
+
+            window->cursorPosX = _glfw.cursorPosX;
+            window->cursorPosY = _glfw.cursorPosY;
+
+            _glfwPlatformGetWindowSize(window, &width, &height);
+            _glfwPlatformSetCursorPos(window, width / 2, height / 2);
+        }
+
+        _glfwPlatformSetCursorMode(window, window->cursorMode);
+    }
+}
+
+// Set sticky keys mode for the specified window
+//
+static void setStickyKeys(_GLFWwindow* window, int enabled)
+{
+    if (window->stickyKeys == enabled)
+        return;
+
+    if (!enabled)
+    {
+        int i;
+
+        // Release all sticky keys
+        for (i = 0;  i <= GLFW_KEY_LAST;  i++)
+        {
+            if (window->keys[i] == _GLFW_STICK)
+                window->keys[i] = GLFW_RELEASE;
+        }
+    }
+
+    window->stickyKeys = enabled;
+}
+
+// Set sticky mouse buttons mode for the specified window
+//
+static void setStickyMouseButtons(_GLFWwindow* window, int enabled)
+{
+    if (window->stickyMouseButtons == enabled)
+        return;
+
+    if (!enabled)
+    {
+        int i;
+
+        // Release all sticky mouse buttons
+        for (i = 0;  i <= GLFW_MOUSE_BUTTON_LAST;  i++)
+        {
+            if (window->mouseButtons[i] == _GLFW_STICK)
+                window->mouseButtons[i] = GLFW_RELEASE;
+        }
+    }
+
+    window->stickyMouseButtons = enabled;
+}
+
+
+>>>>>>> Started addition of Vulkan support on Linux
 //////////////////////////////////////////////////////////////////////////
 //////                         GLFW event API                       //////
 //////////////////////////////////////////////////////////////////////////
@@ -144,6 +241,18 @@ GLFWbool _glfwIsPrintable(int key)
 
 
 //////////////////////////////////////////////////////////////////////////
+//////                       GLFW internal API                      //////
+//////////////////////////////////////////////////////////////////////////
+
+GLFWbool _glfwIsPrintable(int key)
+{
+    return (key >= GLFW_KEY_APOSTROPHE && key <= GLFW_KEY_WORLD_2) ||
+           (key >= GLFW_KEY_KP_0 && key <= GLFW_KEY_KP_ADD) ||
+           key == GLFW_KEY_KP_EQUAL;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
 //////                        GLFW public API                       //////
 //////////////////////////////////////////////////////////////////////////
 
@@ -205,6 +314,7 @@ GLFWAPI void glfwSetInputMode(GLFWwindow* handle, int mode, int value)
         }
 
         case GLFW_STICKY_KEYS:
+<<<<<<< HEAD
         {
             if (window->stickyKeys == value)
                 return;
@@ -245,9 +355,25 @@ GLFWAPI void glfwSetInputMode(GLFWwindow* handle, int mode, int value)
             window->stickyMouseButtons = value ? GLFW_TRUE : GLFW_FALSE;
             return;
         }
+=======
+            setStickyKeys(window, value ? GLFW_TRUE : GLFW_FALSE);
+            break;
+        case GLFW_STICKY_MOUSE_BUTTONS:
+            setStickyMouseButtons(window, value ? GLFW_TRUE : GLFW_FALSE);
+            break;
+        default:
+            _glfwInputError(GLFW_INVALID_ENUM, "Invalid input mode");
+            break;
+>>>>>>> Started addition of Vulkan support on Linux
     }
 
     _glfwInputError(GLFW_INVALID_ENUM, "Invalid input mode %i", mode);
+}
+
+GLFWAPI const char* glfwGetKeyName(int key, int scancode)
+{
+    _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
+    return _glfwPlatformGetKeyName(key, scancode);
 }
 
 GLFWAPI const char* glfwGetKeyName(int key, int scancode)
@@ -609,6 +735,10 @@ GLFWAPI void glfwSetClipboardString(GLFWwindow* handle, const char* string)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
     assert(window != NULL);
+<<<<<<< HEAD
+=======
+
+>>>>>>> Started addition of Vulkan support on Linux
     assert(string != NULL);
 
     _GLFW_REQUIRE_INIT();
