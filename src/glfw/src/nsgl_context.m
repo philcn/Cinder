@@ -92,12 +92,9 @@ static void destroyContextNSGL(_GLFWwindow* window)
 //
 GLFWbool _glfwInitNSGL(void)
 {
-<<<<<<< HEAD
     if (_glfw.nsgl.framework)
         return GLFW_TRUE;
 
-=======
->>>>>>> Started addition of Vulkan support on Linux
     _glfw.nsgl.framework =
         CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
     if (_glfw.nsgl.framework == NULL)
@@ -279,7 +276,6 @@ GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window,
     }
 
     [window->context.nsgl.object setView:window->ns.view];
-<<<<<<< HEAD
 
     window->context.makeCurrent = makeContextCurrentNSGL;
     window->context.swapBuffers = swapBuffersNSGL;
@@ -289,70 +285,6 @@ GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window,
     window->context.destroy = destroyContextNSGL;
 
     return GLFW_TRUE;
-=======
-    return GLFW_TRUE;
-}
-
-// Destroy the OpenGL context
-//
-void _glfwDestroyContextNSGL(_GLFWwindow* window)
-{
-    [window->context.nsgl.pixelFormat release];
-    window->context.nsgl.pixelFormat = nil;
-
-    [window->context.nsgl.object release];
-    window->context.nsgl.object = nil;
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
-
-void _glfwPlatformMakeContextCurrent(_GLFWwindow* window)
-{
-    if (window)
-        [window->context.nsgl.object makeCurrentContext];
-    else
-        [NSOpenGLContext clearCurrentContext];
-
-    _glfwPlatformSetCurrentContext(window);
-}
-
-void _glfwPlatformSwapBuffers(_GLFWwindow* window)
-{
-    // ARP appears to be unnecessary, but this is future-proof
-    [window->context.nsgl.object flushBuffer];
-}
-
-void _glfwPlatformSwapInterval(int interval)
-{
-    _GLFWwindow* window = _glfwPlatformGetCurrentContext();
-
-    GLint sync = interval;
-    [window->context.nsgl.object setValues:&sync
-                              forParameter:NSOpenGLCPSwapInterval];
-}
-
-int _glfwPlatformExtensionSupported(const char* extension)
-{
-    // There are no NSGL extensions
-    return GLFW_FALSE;
-}
-
-GLFWglproc _glfwPlatformGetProcAddress(const char* procname)
-{
-    CFStringRef symbolName = CFStringCreateWithCString(kCFAllocatorDefault,
-                                                       procname,
-                                                       kCFStringEncodingASCII);
-
-    GLFWglproc symbol = CFBundleGetFunctionPointerForName(_glfw.nsgl.framework,
-                                                          symbolName);
-
-    CFRelease(symbolName);
-
-    return symbol;
->>>>>>> Started addition of Vulkan support on Linux
 }
 
 
@@ -365,11 +297,7 @@ GLFWAPI id glfwGetNSGLContext(GLFWwindow* handle)
     _GLFWwindow* window = (_GLFWwindow*) handle;
     _GLFW_REQUIRE_INIT_OR_RETURN(nil);
 
-<<<<<<< HEAD
     if (window->context.client == GLFW_NO_API)
-=======
-    if (window->context.api == GLFW_NO_API)
->>>>>>> Started addition of Vulkan support on Linux
     {
         _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
         return NULL;

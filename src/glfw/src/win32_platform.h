@@ -126,7 +126,6 @@ typedef enum PROCESS_DPI_AWARENESS
 } PROCESS_DPI_AWARENESS;
 #endif /*DPI_ENUMS_DECLARED*/
 
-<<<<<<< HEAD
 // HACK: Define macros that some xinput.h variants don't
 #ifndef XINPUT_CAPS_WIRELESS
  #define XINPUT_CAPS_WIRELESS 0x0002
@@ -161,8 +160,6 @@ typedef enum PROCESS_DPI_AWARENESS
  #define DIDFT_OPTIONAL	0x80000000
 #endif
 
-=======
->>>>>>> Started addition of Vulkan support on Linux
 // winmm.dll function pointer typedefs
 typedef DWORD (WINAPI * TIMEGETTIME_T)(void);
 #define _glfw_timeGetTime _glfw.win32.winmm.timeGetTime
@@ -194,7 +191,6 @@ typedef HRESULT (WINAPI * SETPROCESSDPIAWARENESS_T)(PROCESS_DPI_AWARENESS);
 #define _glfw_SetProcessDpiAwareness _glfw.win32.shcore.SetProcessDpiAwareness
 
 typedef VkFlags VkWin32SurfaceCreateFlagsKHR;
-<<<<<<< HEAD
 
 typedef struct VkWin32SurfaceCreateInfoKHR
 {
@@ -220,38 +216,6 @@ typedef VkBool32 (APIENTRY *PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR)(
 
 #define _GLFW_EGL_NATIVE_WINDOW  ((EGLNativeWindowType) window->win32.handle)
 #define _GLFW_EGL_NATIVE_DISPLAY EGL_DEFAULT_DISPLAY
-=======
-
-typedef struct VkWin32SurfaceCreateInfoKHR
-{
-    VkStructureType                 sType;
-    const void*                     pNext;
-    VkWin32SurfaceCreateFlagsKHR    flags;
-    HINSTANCE                       hinstance;
-    HWND                            hwnd;
-} VkWin32SurfaceCreateInfoKHR;
-
-typedef VkResult (APIENTRY *PFN_vkCreateWin32SurfaceKHR)(VkInstance,const VkWin32SurfaceCreateInfoKHR*,const VkAllocationCallbacks*,VkSurfaceKHR*);
-typedef VkBool32 (APIENTRY *PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR)(VkPhysicalDevice,uint32_t);
-
-#include "win32_joystick.h"
-
-#if defined(_GLFW_WGL)
- #include "wgl_context.h"
-#elif defined(_GLFW_EGL)
- #define _GLFW_EGL_NATIVE_WINDOW  ((EGLNativeWindowType) window->win32.handle)
- #define _GLFW_EGL_NATIVE_DISPLAY EGL_DEFAULT_DISPLAY
- #include "egl_context.h"
-#else
- #error "No supported context creation API selected"
-#endif
->>>>>>> Started addition of Vulkan support on Linux
-
-#define _GLFW_WNDCLASSNAME L"GLFW30"
-
-#define _glfw_dlopen(name) LoadLibraryA(name)
-#define _glfw_dlclose(handle) FreeLibrary((HMODULE) handle)
-#define _glfw_dlsym(handle, name) GetProcAddress((HMODULE) handle, name)
 
 #define _GLFW_PLATFORM_WINDOW_STATE         _GLFWwindowWin32  win32
 #define _GLFW_PLATFORM_LIBRARY_WINDOW_STATE _GLFWlibraryWin32 win32
@@ -271,13 +235,6 @@ typedef struct _GLFWwindowWin32
 
     GLFWbool            cursorTracked;
     GLFWbool            iconified;
-<<<<<<< HEAD
-=======
-
-    int                 minwidth, minheight;
-    int                 maxwidth, maxheight;
-    int                 numer, denom;
->>>>>>> Started addition of Vulkan support on Linux
 
     // The last received cursor position, regardless of source
     int                 lastCursorPosX, lastCursorPosY;
@@ -288,23 +245,16 @@ typedef struct _GLFWwindowWin32
 //
 typedef struct _GLFWlibraryWin32
 {
-<<<<<<< HEAD
     HWND                helperWindowHandle;
-=======
-    HWND                helperWindow;
->>>>>>> Started addition of Vulkan support on Linux
     DWORD               foregroundLockTimeout;
     char*               clipboardString;
     char                keyName[64];
     short int           publicKeys[512];
     short int           nativeKeys[GLFW_KEY_LAST + 1];
-<<<<<<< HEAD
     // Where to place the cursor when re-enabled
     double              restoreCursorPosX, restoreCursorPosY;
     // The window whose disabled cursor mode is active
     _GLFWwindow*        disabledCursorWindow;
-=======
->>>>>>> Started addition of Vulkan support on Linux
 
     struct {
         HINSTANCE       instance;
@@ -335,19 +285,10 @@ typedef struct _GLFWlibraryWin32
         DWMFLUSH_T      DwmFlush;
     } dwmapi;
 
-<<<<<<< HEAD
-=======
-    // shcore.dll
->>>>>>> Started addition of Vulkan support on Linux
     struct {
         HINSTANCE       instance;
         SETPROCESSDPIAWARENESS_T SetProcessDpiAwareness;
     } shcore;
-<<<<<<< HEAD
-=======
-
-} _GLFWlibraryWin32;
->>>>>>> Started addition of Vulkan support on Linux
 
 } _GLFWlibraryWin32;
 
@@ -378,12 +319,7 @@ typedef struct _GLFWcursorWin32
 typedef struct _GLFWtimeWin32
 {
     GLFWbool            hasPC;
-<<<<<<< HEAD
     uint64_t            frequency;
-=======
-    double              resolution;
-    unsigned __int64    base;
->>>>>>> Started addition of Vulkan support on Linux
 
 } _GLFWtimeWin32;
 
@@ -397,19 +333,6 @@ typedef struct _GLFWtlsWin32
 } _GLFWtlsWin32;
 
 
-<<<<<<< HEAD
-=======
-// Win32-specific global TLS data
-//
-typedef struct _GLFWtlsWin32
-{
-    GLFWbool        allocated;
-    DWORD           context;
-
-} _GLFWtlsWin32;
-
-
->>>>>>> Started addition of Vulkan support on Linux
 GLFWbool _glfwRegisterWindowClassWin32(void);
 void _glfwUnregisterWindowClassWin32(void);
 

@@ -45,11 +45,7 @@ void _glfwInitTimerPOSIX(void)
     if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0)
     {
         _glfw.posix_time.monotonic = GLFW_TRUE;
-<<<<<<< HEAD
         _glfw.posix_time.frequency = 1000000000;
-=======
-        _glfw.posix_time.resolution = 1e-9;
->>>>>>> Started addition of Vulkan support on Linux
     }
     else
 #endif

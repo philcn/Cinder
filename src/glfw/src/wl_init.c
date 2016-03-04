@@ -599,20 +599,10 @@ int _glfwPlatformInit(void)
 
     if (!_glfwInitThreadLocalStoragePOSIX())
         return GLFW_FALSE;
-<<<<<<< HEAD
 
     if (!_glfwInitJoysticksLinux())
         return GLFW_FALSE;
 
-=======
-
-    if (!_glfwInitEGL())
-        return GLFW_FALSE;
-
-    if (!_glfwInitJoysticksLinux())
-        return GLFW_FALSE;
-
->>>>>>> Started addition of Vulkan support on Linux
     _glfwInitTimerPOSIX();
 
     if (_glfw.wl.pointer && _glfw.wl.shm)

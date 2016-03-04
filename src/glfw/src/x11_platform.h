@@ -90,28 +90,12 @@ typedef VkBool32 (APIENTRY *PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR)(Vk
 #include "glx_context.h"
 #include "egl_context.h"
 
-<<<<<<< HEAD
 #define _glfw_dlopen(name) dlopen(name, RTLD_LAZY | RTLD_LOCAL)
 #define _glfw_dlclose(handle) dlclose(handle)
 #define _glfw_dlsym(handle, name) dlsym(handle, name)
 
 #define _GLFW_EGL_NATIVE_WINDOW  ((EGLNativeWindowType) window->x11.handle)
 #define _GLFW_EGL_NATIVE_DISPLAY ((EGLNativeDisplayType) _glfw.x11.display)
-=======
-#if defined(_GLFW_GLX)
- #include "glx_context.h"
-#elif defined(_GLFW_EGL)
- #define _GLFW_EGL_NATIVE_WINDOW  ((EGLNativeWindowType) window->x11.handle)
- #define _GLFW_EGL_NATIVE_DISPLAY ((EGLNativeDisplayType) _glfw.x11.display)
- #include "egl_context.h"
-#else
- #error "No supported context creation API selected"
-#endif
->>>>>>> Started addition of Vulkan support on Linux
-
-#define _glfw_dlopen(name) dlopen(name, RTLD_LAZY | RTLD_LOCAL)
-#define _glfw_dlclose(handle) dlclose(handle)
-#define _glfw_dlsym(handle, name) dlsym(handle, name)
 
 #define _GLFW_PLATFORM_WINDOW_STATE         _GLFWwindowX11  x11
 #define _GLFW_PLATFORM_LIBRARY_WINDOW_STATE _GLFWlibraryX11 x11
@@ -168,13 +152,10 @@ typedef struct _GLFWlibraryX11
     short int       publicKeys[256];
     // GLFW key to X11 keycode LUT
     short int       nativeKeys[GLFW_KEY_LAST + 1];
-<<<<<<< HEAD
     // Where to place the cursor when re-enabled
     double          restoreCursorPosX, restoreCursorPosY;
     // The window whose disabled cursor mode is active
     _GLFWwindow*    disabledCursorWindow;
-=======
->>>>>>> Started addition of Vulkan support on Linux
 
     // Window manager atoms
     Atom            WM_PROTOCOLS;

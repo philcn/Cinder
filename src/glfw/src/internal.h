@@ -48,18 +48,6 @@
 #define GLFW_INCLUDE_NONE
 #include "glfw3.h"
 
-<<<<<<< HEAD
-=======
-#include <stddef.h>
-
-#if defined(_MSC_VER) && (_MSC_VER < 1600)
-typedef unsigned __int64 GLFWuint64;
-#else
- #include <stdint.h>
-typedef uint64_t GLFWuint64;
-#endif
-
->>>>>>> Started addition of Vulkan support on Linux
 typedef int GLFWbool;
 
 typedef struct _GLFWwndconfig   _GLFWwndconfig;
@@ -71,7 +59,6 @@ typedef struct _GLFWlibrary     _GLFWlibrary;
 typedef struct _GLFWmonitor     _GLFWmonitor;
 typedef struct _GLFWcursor      _GLFWcursor;
 
-<<<<<<< HEAD
 typedef void (* _GLFWmakecontextcurrentfun)(_GLFWwindow*);
 typedef void (* _GLFWswapbuffersfun)(_GLFWwindow*);
 typedef void (* _GLFWswapintervalfun)(int);
@@ -79,8 +66,6 @@ typedef int (* _GLFWextensionsupportedfun)(const char*);
 typedef GLFWglproc (* _GLFWgetprocaddressfun)(const char*);
 typedef void (* _GLFWdestroycontextfun)(_GLFWwindow*);
 
-=======
->>>>>>> Started addition of Vulkan support on Linux
 #define GL_VERSION 0x1f02
 #define GL_NONE	0
 #define GL_COLOR_BUFFER_BIT	0x00004000
@@ -114,15 +99,9 @@ typedef const GLubyte* (APIENTRY * PFNGLGETSTRINGIPROC)(GLenum,GLuint);
 
 typedef void* VkInstance;
 typedef void* VkPhysicalDevice;
-<<<<<<< HEAD
 typedef uint64_t VkSurfaceKHR;
 typedef uint32_t VkFlags;
 typedef uint32_t VkBool32;
-=======
-typedef GLFWuint64 VkSurfaceKHR;
-typedef unsigned int VkFlags;
-typedef unsigned int VkBool32;
->>>>>>> Started addition of Vulkan support on Linux
 
 typedef enum VkStructureType
 {
@@ -167,7 +146,6 @@ typedef struct VkAllocationCallbacks VkAllocationCallbacks;
 typedef struct VkExtensionProperties
 {
     char            extensionName[256];
-<<<<<<< HEAD
     uint32_t        specVersion;
 } VkExtensionProperties;
 
@@ -182,17 +160,6 @@ typedef void (APIENTRY * PFN_vkVoidFunction)(void);
   #define vkEnumerateInstanceExtensionProperties _glfw.vk.EnumerateInstanceExtensionProperties
   #define vkGetInstanceProcAddr _glfw.vk.GetInstanceProcAddr
 #endif
-=======
-    unsigned int    specVersion;
-} VkExtensionProperties;
-
-typedef void (APIENTRY * PFN_vkVoidFunction)(void);
-typedef PFN_vkVoidFunction (APIENTRY * PFN_vkGetInstanceProcAddr)(VkInstance,const char*);
-typedef VkResult (APIENTRY * PFN_vkEnumerateInstanceExtensionProperties)(const char*,unsigned int*,VkExtensionProperties*);
-
-#define vkEnumerateInstanceExtensionProperties _glfw.vk.EnumerateInstanceExtensionProperties
-#define vkGetInstanceProcAddr _glfw.vk.GetInstanceProcAddr
->>>>>>> Started addition of Vulkan support on Linux
 
 #if defined(_GLFW_COCOA)
  #include "cocoa_platform.h"
@@ -293,10 +260,6 @@ struct _GLFWwndconfig
     GLFWbool      autoIconify;
     GLFWbool      floating;
     GLFWbool      maximized;
-<<<<<<< HEAD
-=======
-    _GLFWmonitor* monitor;
->>>>>>> Started addition of Vulkan support on Linux
 };
 
 /*! @brief Context configuration.
@@ -345,7 +308,6 @@ struct _GLFWfbconfig
     int         samples;
     GLFWbool    sRGB;
     GLFWbool    doublebuffer;
-<<<<<<< HEAD
     uintptr_t   handle;
 };
 
@@ -371,8 +333,6 @@ struct _GLFWcontext
     _GLFWextensionsupportedfun  extensionSupported;
     _GLFWgetprocaddressfun      getProcAddress;
     _GLFWdestroycontextfun      destroy;
-=======
->>>>>>> Started addition of Vulkan support on Linux
 
     // This is defined in the context API's context.h
     _GLFW_PLATFORM_CONTEXT_STATE;
@@ -380,30 +340,6 @@ struct _GLFWcontext
     _GLFW_EGL_CONTEXT_STATE;
 };
 
-<<<<<<< HEAD
-=======
-
-/*! @brief Context structure.
- */
-struct _GLFWcontext
-{
-    int                 api;
-    int                 major, minor, revision;
-    GLFWbool            forward, debug, noerror;
-    int                 profile;
-    int                 robustness;
-    int                 release;
-
-    PFNGLGETSTRINGIPROC GetStringi;
-    PFNGLGETINTEGERVPROC GetIntegerv;
-    PFNGLGETSTRINGPROC  GetString;
-
-    // This is defined in the context API's context.h
-    _GLFW_PLATFORM_CONTEXT_STATE;
-};
-
-
->>>>>>> Started addition of Vulkan support on Linux
 /*! @brief Window and context structure.
  */
 struct _GLFWwindow
@@ -421,19 +357,12 @@ struct _GLFWwindow
     _GLFWmonitor*       monitor;
     _GLFWcursor*        cursor;
 
-<<<<<<< HEAD
     int                 minwidth, minheight;
     int                 maxwidth, maxheight;
     int                 numer, denom;
 
     GLFWbool            stickyKeys;
     GLFWbool            stickyMouseButtons;
-=======
-    // Window input state
-    GLFWbool            stickyKeys;
-    GLFWbool            stickyMouseButtons;
-    double              cursorPosX, cursorPosY;
->>>>>>> Started addition of Vulkan support on Linux
     int                 cursorMode;
     char                mouseButtons[GLFW_MOUSE_BUTTON_LAST + 1];
     char                keys[GLFW_KEY_LAST + 1];
@@ -526,21 +455,6 @@ struct _GLFWlibrary
         PFN_vkEnumerateInstanceExtensionProperties EnumerateInstanceExtensionProperties;
         PFN_vkGetInstanceProcAddr GetInstanceProcAddr;
 #endif
-        GLFWbool        KHR_surface;
-        GLFWbool        KHR_win32_surface;
-        GLFWbool        KHR_xlib_surface;
-        GLFWbool        KHR_xcb_surface;
-        GLFWbool        KHR_wayland_surface;
-        GLFWbool        KHR_mir_surface;
-    } vk;
-
-    struct {
-        GLFWbool        available;
-        void*           handle;
-        char**          extensions;
-        unsigned int    extensionCount;
-        PFN_vkEnumerateInstanceExtensionProperties EnumerateInstanceExtensionProperties;
-        PFN_vkGetInstanceProcAddr GetInstanceProcAddr;
         GLFWbool        KHR_surface;
         GLFWbool        KHR_win32_surface;
         GLFWbool        KHR_xlib_surface;
@@ -802,14 +716,11 @@ void _glfwPlatformHideWindow(_GLFWwindow* window);
  */
 void _glfwPlatformFocusWindow(_GLFWwindow* window);
 
-<<<<<<< HEAD
 /*! @copydoc glfwSetWindowMonitor
  *  @ingroup platform
  */
 void _glfwPlatformSetWindowMonitor(_GLFWwindow* window, _GLFWmonitor* monitor, int xpos, int ypos, int width, int height, int refreshRate);
 
-=======
->>>>>>> Started addition of Vulkan support on Linux
 /*! @brief Returns whether the window is focused.
  *  @ingroup platform
  */
@@ -854,10 +765,6 @@ void _glfwPlatformPostEmptyEvent(void);
  */
 void _glfwPlatformSetCurrentContext(_GLFWwindow* context);
 
-/*! @ingroup platform
- */
-void _glfwPlatformSetCurrentContext(_GLFWwindow* context);
-
 /*! @copydoc glfwGetCurrentContext
  *  @ingroup platform
  */
@@ -885,19 +792,11 @@ void _glfwPlatformSetCursor(_GLFWwindow* window, _GLFWcursor* cursor);
 
 /*! @ingroup platform
  */
-<<<<<<< HEAD
 char** _glfwPlatformGetRequiredInstanceExtensions(uint32_t* count);
 
 /*! @ingroup platform
  */
 int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance, VkPhysicalDevice device, uint32_t queuefamily);
-=======
-char** _glfwPlatformGetRequiredInstanceExtensions(unsigned int* count);
-
-/*! @ingroup platform
- */
-int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance, VkPhysicalDevice device, unsigned int queuefamily);
->>>>>>> Started addition of Vulkan support on Linux
 
 /*! @ingroup platform
  */
@@ -1109,18 +1008,6 @@ GLFWbool _glfwRefreshContextAttribs(const _GLFWctxconfig* ctxconfig);
  *  values.
  */
 GLFWbool _glfwIsValidContextConfig(const _GLFWctxconfig* ctxconfig);
-<<<<<<< HEAD
-=======
-
-/*! @brief Checks whether the current context fulfils the specified hard
- *  constraints.
- *  @param[in] ctxconfig The desired context attributes.
- *  @return `GLFW_TRUE` if the context fulfils the hard constraints, or
- *  `GLFW_FALSE` otherwise.
- *  @ingroup utility
- */
-GLFWbool _glfwIsValidContext(const _GLFWctxconfig* ctxconfig);
->>>>>>> Started addition of Vulkan support on Linux
 
 /*! @ingroup utility
  */
@@ -1155,11 +1042,7 @@ GLFWbool _glfwIsPrintable(int key);
 
 /*! @ingroup utility
  */
-<<<<<<< HEAD
 GLFWbool _glfwInitVulkan(void);
-=======
-void _glfwInitVulkan(void);
->>>>>>> Started addition of Vulkan support on Linux
 
 /*! @ingroup utility
  */

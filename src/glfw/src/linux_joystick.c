@@ -45,11 +45,6 @@
 
 // Attempt to open the specified joystick device
 //
-<<<<<<< HEAD
-=======
-static GLFWbool openJoystickDevice(const char* path)
-{
->>>>>>> Started addition of Vulkan support on Linux
 #if defined(__linux__)
 static GLFWbool openJoystickDevice(const char* path)
 {
@@ -105,12 +100,8 @@ static GLFWbool openJoystickDevice(const char* path)
     ioctl(fd, JSIOCGBUTTONS, &buttonCount);
     js->buttonCount = (int) buttonCount;
     js->buttons = calloc(buttonCount, 1);
-<<<<<<< HEAD
 
     _glfwInputJoystickChange(joy, GLFW_CONNECTED);
-=======
-#endif // __linux__
->>>>>>> Started addition of Vulkan support on Linux
     return GLFW_TRUE;
 }
 #endif // __linux__
@@ -120,36 +111,11 @@ static GLFWbool openJoystickDevice(const char* path)
 static GLFWbool pollJoystickEvents(_GLFWjoystickLinux* js)
 {
 #if defined(__linux__)
-<<<<<<< HEAD
     _glfwPollJoystickEvents();
-=======
-    ssize_t offset = 0;
-    char buffer[16384];
-
-    const ssize_t size = read(_glfw.linux_js.inotify, buffer, sizeof(buffer));
-
-    while (size > offset)
-    {
-        regmatch_t match;
-        const struct inotify_event* e = (struct inotify_event*) (buffer + offset);
-
-        if (regexec(&_glfw.linux_js.regex, e->name, 1, &match, 0) == 0)
-        {
-            char path[20];
-            snprintf(path, sizeof(path), "/dev/input/%s", e->name);
-            openJoystickDevice(path);
-        }
->>>>>>> Started addition of Vulkan support on Linux
 
     if (!js->present)
         return GLFW_FALSE;
 
-<<<<<<< HEAD
-=======
-    if (!js->present)
-        return GLFW_FALSE;
-
->>>>>>> Started addition of Vulkan support on Linux
     // Read all queued events (non-blocking)
     for (;;)
     {
@@ -165,16 +131,11 @@ static GLFWbool pollJoystickEvents(_GLFWjoystickLinux* js)
                 free(js->buttons);
                 free(js->name);
                 free(js->path);
-<<<<<<< HEAD
 
                 memset(js, 0, sizeof(_GLFWjoystickLinux));
 
                 _glfwInputJoystickChange(js - _glfw.linux_js.js,
                                          GLFW_DISCONNECTED);
-=======
-
-                memset(js, 0, sizeof(_GLFWjoystickLinux));
->>>>>>> Started addition of Vulkan support on Linux
             }
 
             break;
@@ -190,18 +151,6 @@ static GLFWbool pollJoystickEvents(_GLFWjoystickLinux* js)
     }
 #endif // __linux__
     return js->present;
-<<<<<<< HEAD
-=======
-}
-
-// Lexically compare joysticks, used by quicksort
-//
-static int compareJoysticks(const void* fp, const void* sp)
-{
-    const _GLFWjoystickLinux* fj = fp;
-    const _GLFWjoystickLinux* sj = sp;
-    return strcmp(fj->path, sj->path);
->>>>>>> Started addition of Vulkan support on Linux
 }
 
 // Lexically compare joysticks by name; used by qsort

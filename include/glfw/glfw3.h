@@ -232,11 +232,7 @@ extern "C" {
  *  API changes.
  *  @ingroup init
  */
-<<<<<<< HEAD
 #define GLFW_VERSION_REVISION       1
-=======
-#define GLFW_VERSION_REVISION       0
->>>>>>> Started addition of Vulkan support on Linux
 /*! @} */
 
 /*! @name Boolean values
@@ -665,10 +661,7 @@ extern "C" {
 #define GLFW_OPENGL_PROFILE         0x00022008
 #define GLFW_CONTEXT_RELEASE_BEHAVIOR 0x00022009
 #define GLFW_CONTEXT_NO_ERROR       0x0002200A
-<<<<<<< HEAD
 #define GLFW_CONTEXT_CREATION_API   0x0002200B
-=======
->>>>>>> Started addition of Vulkan support on Linux
 
 #define GLFW_NO_API                          0
 #define GLFW_OPENGL_API             0x00030001
@@ -1195,10 +1188,7 @@ typedef struct GLFWgammaramp
 /*! @brief Image data.
  *
  *  @sa @ref cursor_custom
-<<<<<<< HEAD
  *  @sa @ref window_icon
-=======
->>>>>>> Started addition of Vulkan support on Linux
  *
  *  @since Added in version 2.1.
  *  @glfw3 Removed format and bytes-per-pixel members.
@@ -1796,16 +1786,10 @@ GLFWAPI void glfwWindowHint(int hint, int value);
  *  @remark @win32 Window creation will fail if the Microsoft GDI software
  *  OpenGL implementation is the only one available.
  *
-<<<<<<< HEAD
  *  @remark @win32 If the executable has an icon resource named `GLFW_ICON,` it
  *  will be set as the initial icon for the window.  If no such icon is present,
  *  the `IDI_WINLOGO` icon will be used instead.  To set a different icon, see
  *  @ref glfwSetWindowIcon.
-=======
- *  @remark @win32 If the executable has an icon resource named `GLFW_ICON,`
- *  it will be set as the icon for the window.  If no such icon is present, the
- *  `IDI_WINLOGO` icon will be used instead.
->>>>>>> Started addition of Vulkan support on Linux
  *
  *  @remark @win32 The context to share resources with must not be current on
  *  any other thread.
@@ -1831,11 +1815,6 @@ GLFWAPI void glfwWindowHint(int hint, int value);
  *  a custom `Info.plist` template for this, which can be found as
  *  `CMake/MacOSXBundleInfo.plist.in` in the source tree.
  *
-<<<<<<< HEAD
-=======
- *  @remark @x11 There is no mechanism for setting the window icon yet.
- *
->>>>>>> Started addition of Vulkan support on Linux
  *  @remark @x11 Some window managers will not respect the placement of
  *  initially hidden windows.
  *
@@ -1941,19 +1920,11 @@ GLFWAPI void glfwSetWindowShouldClose(GLFWwindow* window, int value);
  *
  *  @remark @osx The window title will not be updated until the next time you
  *  process events.
-<<<<<<< HEAD
-=======
- *
- *  @thread_safety This function must only be called from the main thread.
->>>>>>> Started addition of Vulkan support on Linux
  *
  *  @thread_safety This function must only be called from the main thread.
  *
-<<<<<<< HEAD
  *  @sa @ref window_title
  *
-=======
->>>>>>> Started addition of Vulkan support on Linux
  *  @since Added in version 1.0.
  *  @glfw3 Added window handle parameter.
  *
@@ -2092,7 +2063,6 @@ GLFWAPI void glfwGetWindowSize(GLFWwindow* window, int* width, int* height);
 /*! @brief Sets the size limits of the specified window.
  *
  *  This function sets the size limits of the client area of the specified
-<<<<<<< HEAD
  *  window.  If the window is full screen, the size limits only take effect
  *  once it is made windowed.  If the window is not resizable, this function
  *  does nothing.
@@ -2102,13 +2072,6 @@ GLFWAPI void glfwGetWindowSize(GLFWwindow* window, int* width, int* height);
  *
  *  The maximum dimensions must be greater than or equal to the minimum
  *  dimensions and all must be greater than or equal to zero.
-=======
- *  window.  If the window is full screen or not resizable, this function does
- *  nothing.
- *
- *  The size limits are applied immediately and may cause the window to be
- *  resized.
->>>>>>> Started addition of Vulkan support on Linux
  *
  *  @param[in] window The window to set limits for.
  *  @param[in] minwidth The minimum width, in screen coordinates, of the client
@@ -2120,13 +2083,8 @@ GLFWAPI void glfwGetWindowSize(GLFWwindow* window, int* width, int* height);
  *  @param[in] maxheight The maximum height, in screen coordinates, of the
  *  client area, or `GLFW_DONT_CARE`.
  *
-<<<<<<< HEAD
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED, @ref
  *  GLFW_INVALID_VALUE and @ref GLFW_PLATFORM_ERROR.
-=======
- *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
- *  GLFW_PLATFORM_ERROR.
->>>>>>> Started addition of Vulkan support on Linux
  *
  *  @remark If you set size limits and an aspect ratio that conflict, the
  *  results are undefined.
@@ -2145,12 +2103,8 @@ GLFWAPI void glfwSetWindowSizeLimits(GLFWwindow* window, int minwidth, int minhe
 /*! @brief Sets the aspect ratio of the specified window.
  *
  *  This function sets the required aspect ratio of the client area of the
-<<<<<<< HEAD
  *  specified window.  If the window is full screen, the aspect ratio only takes
  *  effect once it is made windowed.  If the window is not resizable, this
-=======
- *  specified window.  If the window is full screen or not resizable, this
->>>>>>> Started addition of Vulkan support on Linux
  *  function does nothing.
  *
  *  The aspect ratio is specified as a numerator and a denominator and both
@@ -2160,13 +2114,8 @@ GLFWAPI void glfwSetWindowSizeLimits(GLFWwindow* window, int minwidth, int minhe
  *  If the numerator and denominator is set to `GLFW_DONT_CARE` then the aspect
  *  ratio limit is disabled.
  *
-<<<<<<< HEAD
  *  The aspect ratio is applied immediately to a windowed mode window and may
  *  cause it to be resized.
-=======
- *  The aspect ratio is applied immediately and may cause the window to be
- *  resized.
->>>>>>> Started addition of Vulkan support on Linux
  *
  *  @param[in] window The window to set limits for.
  *  @param[in] numer The numerator of the desired aspect ratio, or
@@ -2337,15 +2286,6 @@ GLFWAPI void glfwIconifyWindow(GLFWwindow* window);
  *  GLFW_PLATFORM_ERROR.
  *
  *  @thread_safety This function must only be called from the main thread.
-<<<<<<< HEAD
- *
- *  @sa @ref window_iconify
- *  @sa glfwIconifyWindow
- *  @sa glfwMaximizeWindow
- *
- *  @since Added in version 2.1.
- *  @glfw3 Added window handle parameter.
-=======
  *
  *  @sa @ref window_iconify
  *  @sa glfwIconifyWindow
@@ -2367,36 +2307,11 @@ GLFWAPI void glfwRestoreWindow(GLFWwindow* window);
  *
  *  @param[in] window The window to maximize.
  *
+ *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
+ *  GLFW_PLATFORM_ERROR.
+ *
  *  @par Thread Safety
  *  This function may only be called from the main thread.
- *
- *  @sa @ref window_iconify
- *  @sa glfwIconifyWindow
- *  @sa glfwRestoreWindow
- *
- *  @since Added in GLFW 3.2.
->>>>>>> Started addition of Vulkan support on Linux
- *
- *  @ingroup window
- */
-GLFWAPI void glfwMaximizeWindow(GLFWwindow* window);
-
-/*! @brief Maximizes the specified window.
- *
- *  This function maximizes the specified window if it was previously not
- *  maximized.  If the window is already maximized, this function does nothing.
- *
- *  If the specified window is a full screen window, this function does nothing.
- *
- *  @param[in] window The window to maximize.
- *
- *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
- *  GLFW_PLATFORM_ERROR.
- *
- *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
- *  GLFW_PLATFORM_ERROR.
- *
- *  @thread_safety This function must only be called from the main thread.
  *
  *  @sa @ref window_iconify
  *  @sa glfwIconifyWindow
@@ -3224,13 +3139,6 @@ GLFWAPI void glfwGetCursorPos(GLFWwindow* window, double* xpos, double* ypos);
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
  *  GLFW_PLATFORM_ERROR.
  *
-<<<<<<< HEAD
-=======
- *  @remark @x11 Due to the asynchronous nature of X11, it may take a moment for
- *  the window focus event to arrive.  This means you may not be able to set the
- *  cursor position directly after window creation.
- *
->>>>>>> Started addition of Vulkan support on Linux
  *  @thread_safety This function must only be called from the main thread.
  *
  *  @sa @ref cursor_pos
@@ -3820,14 +3728,9 @@ GLFWAPI const char* glfwGetClipboardString(GLFWwindow* window);
  *
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
  *
-<<<<<<< HEAD
  *  @thread_safety This function may be called from any thread.  Reading and
  *  writing of the internal timer offset is not atomic, so it needs to be
  *  externally synchronized with calls to @ref glfwSetTime.
-=======
- *  @thread_safety This function may be called from any thread.  Access is not
- *  synchronized.
->>>>>>> Started addition of Vulkan support on Linux
  *
  *  @sa @ref time
  *
@@ -3852,13 +3755,9 @@ GLFWAPI double glfwGetTime(void);
  *  floor((2<sup>64</sup> - 1) / 10<sup>9</sup>) and is due to implementations
  *  storing nanoseconds in 64 bits.  The limit may be increased in the future.
  *
-<<<<<<< HEAD
  *  @thread_safety This function may be called from any thread.  Reading and
  *  writing of the internal timer offset is not atomic, so it needs to be
  *  externally synchronized with calls to @ref glfwGetTime.
-=======
- *  @thread_safety This function must only be called from the main thread.
->>>>>>> Started addition of Vulkan support on Linux
  *
  *  @sa @ref time
  *
@@ -4194,11 +4093,7 @@ GLFWAPI int glfwVulkanSupported(void);
  *
  *  @ingroup vulkan
  */
-<<<<<<< HEAD
 GLFWAPI const char** glfwGetRequiredInstanceExtensions(uint32_t* count);
-=======
-GLFWAPI const char** glfwGetRequiredInstanceExtensions(unsigned int* count);
->>>>>>> Started addition of Vulkan support on Linux
 
 #if defined(VK_VERSION_1_0)
 
@@ -4312,11 +4207,7 @@ GLFWAPI int glfwGetPhysicalDevicePresentationSupport(VkInstance instance, VkPhys
  *  @remarks If an error occurs before the creation call is made, GLFW returns
  *  the Vulkan error code most appropriate for the error.  Appropriate use of
  *  @ref glfwVulkanSupported and @ref glfwGetRequiredInstanceExtensions should
-<<<<<<< HEAD
  *  eliminate almost all occurrences of these errors.
-=======
- *  elminiate almost all occurences of these errors.
->>>>>>> Started addition of Vulkan support on Linux
  *
  *  @thread_safety This function may be called from any thread.  For
  *  synchronization details of Vulkan objects, see the Vulkan specification.

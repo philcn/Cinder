@@ -47,11 +47,7 @@ static int getGLXFBConfigAttrib(GLXFBConfig fbconfig, int attrib)
 
 // Return the GLXFBConfig most closely matching the specified hints
 //
-<<<<<<< HEAD
 static GLFWbool chooseGLXFBConfig(const _GLFWfbconfig* desired, GLXFBConfig* result)
-=======
-static GLFWbool chooseFBConfig(const _GLFWfbconfig* desired, GLXFBConfig* result)
->>>>>>> Started addition of Vulkan support on Linux
 {
     GLXFBConfig* nativeConfigs;
     _GLFWfbconfig* usableConfigs;
@@ -108,15 +104,9 @@ static GLFWbool chooseFBConfig(const _GLFWfbconfig* desired, GLXFBConfig* result
 
         u->auxBuffers = getGLXFBConfigAttrib(n, GLX_AUX_BUFFERS);
 
-<<<<<<< HEAD
         if (getGLXFBConfigAttrib(n, GLX_STEREO))
             u->stereo = GLFW_TRUE;
         if (getGLXFBConfigAttrib(n, GLX_DOUBLEBUFFER))
-=======
-        if (getFBConfigAttrib(n, GLX_STEREO))
-            u->stereo = GLFW_TRUE;
-        if (getFBConfigAttrib(n, GLX_DOUBLEBUFFER))
->>>>>>> Started addition of Vulkan support on Linux
             u->doublebuffer = GLFW_TRUE;
 
         if (_glfw.glx.ARB_multisample)
@@ -136,11 +126,7 @@ static GLFWbool chooseFBConfig(const _GLFWfbconfig* desired, GLXFBConfig* result
     XFree(nativeConfigs);
     free(usableConfigs);
 
-<<<<<<< HEAD
     return closest != NULL;
-=======
-    return closest ? GLFW_TRUE : GLFW_FALSE;
->>>>>>> Started addition of Vulkan support on Linux
 }
 
 // Create the OpenGL context using legacy API
@@ -233,7 +219,6 @@ static GLFWglproc getProcAddressGLX(const char* procname)
 //
 static void destroyContextGLX(_GLFWwindow* window)
 {
-<<<<<<< HEAD
     if (window->context.glx.window)
     {
         glXDestroyWindow(_glfw.x11.display, window->context.glx.window);
@@ -245,13 +230,6 @@ static void destroyContextGLX(_GLFWwindow* window)
         glXDestroyContext(_glfw.x11.display, window->context.glx.handle);
         window->context.glx.handle = NULL;
     }
-=======
-    return glXCreateNewContext(_glfw.x11.display,
-                               fbconfig,
-                               GLX_RGBA_TYPE,
-                               share,
-                               True);
->>>>>>> Started addition of Vulkan support on Linux
 }
 
 
@@ -275,7 +253,6 @@ GLFWbool _glfwInitGLX(void)
         NULL
     };
 
-<<<<<<< HEAD
     if (_glfw.glx.handle)
         return GLFW_TRUE;
 
@@ -286,16 +263,6 @@ GLFWbool _glfwInitGLX(void)
             break;
     }
 
-=======
-
-    for (i = 0;  sonames[i];  i++)
-    {
-        _glfw.glx.handle = dlopen(sonames[i], RTLD_LAZY | RTLD_GLOBAL);
-        if (_glfw.glx.handle)
-            break;
-    }
-
->>>>>>> Started addition of Vulkan support on Linux
     if (!_glfw.glx.handle)
     {
         _glfwInputError(GLFW_API_UNAVAILABLE, "GLX: Failed to load GLX");
@@ -332,7 +299,6 @@ GLFWbool _glfwInitGLX(void)
         dlsym(_glfw.glx.handle, "glXGetProcAddressARB");
     _glfw.glx.GetVisualFromFBConfig =
         dlsym(_glfw.glx.handle, "glXGetVisualFromFBConfig");
-<<<<<<< HEAD
 
     if (!_glfw.glx.GetFBConfigs ||
         !_glfw.glx.GetFBConfigAttrib ||
@@ -354,8 +320,6 @@ GLFWbool _glfwInitGLX(void)
                         "GLX: Failed to load required entry points");
         return GLFW_FALSE;
     }
-=======
->>>>>>> Started addition of Vulkan support on Linux
 
     if (!glXQueryExtension(_glfw.x11.display,
                            &_glfw.glx.errorBase,
@@ -406,7 +370,6 @@ GLFWbool _glfwInitGLX(void)
             _glfw.glx.MESA_swap_control = GLFW_TRUE;
     }
 
-<<<<<<< HEAD
     if (extensionSupportedGLX("GLX_ARB_multisample"))
         _glfw.glx.ARB_multisample = GLFW_TRUE;
 
@@ -414,15 +377,6 @@ GLFWbool _glfwInitGLX(void)
         _glfw.glx.ARB_framebuffer_sRGB = GLFW_TRUE;
 
     if (extensionSupportedGLX("GLX_EXT_framebuffer_sRGB"))
-=======
-    if (_glfwPlatformExtensionSupported("GLX_ARB_multisample"))
-        _glfw.glx.ARB_multisample = GLFW_TRUE;
-
-    if (_glfwPlatformExtensionSupported("GLX_ARB_framebuffer_sRGB"))
-        _glfw.glx.ARB_framebuffer_sRGB = GLFW_TRUE;
-
-    if (_glfwPlatformExtensionSupported("GLX_EXT_framebuffer_sRGB"))
->>>>>>> Started addition of Vulkan support on Linux
         _glfw.glx.EXT_framebuffer_sRGB = GLFW_TRUE;
 
     if (extensionSupportedGLX("GLX_ARB_create_context"))
@@ -434,7 +388,6 @@ GLFWbool _glfwInitGLX(void)
             _glfw.glx.ARB_create_context = GLFW_TRUE;
     }
 
-<<<<<<< HEAD
     if (extensionSupportedGLX("GLX_ARB_create_context_robustness"))
         _glfw.glx.ARB_create_context_robustness = GLFW_TRUE;
 
@@ -445,18 +398,6 @@ GLFWbool _glfwInitGLX(void)
         _glfw.glx.EXT_create_context_es2_profile = GLFW_TRUE;
 
     if (extensionSupportedGLX("GLX_ARB_context_flush_control"))
-=======
-    if (_glfwPlatformExtensionSupported("GLX_ARB_create_context_robustness"))
-        _glfw.glx.ARB_create_context_robustness = GLFW_TRUE;
-
-    if (_glfwPlatformExtensionSupported("GLX_ARB_create_context_profile"))
-        _glfw.glx.ARB_create_context_profile = GLFW_TRUE;
-
-    if (_glfwPlatformExtensionSupported("GLX_EXT_create_context_es2_profile"))
-        _glfw.glx.EXT_create_context_es2_profile = GLFW_TRUE;
-
-    if (_glfwPlatformExtensionSupported("GLX_ARB_context_flush_control"))
->>>>>>> Started addition of Vulkan support on Linux
         _glfw.glx.ARB_context_flush_control = GLFW_TRUE;
 
     return GLFW_TRUE;
@@ -632,16 +573,11 @@ GLFWbool _glfwCreateContextGLX(_GLFWwindow* window,
                 ctxconfig->forward == GLFW_FALSE)
             {
                 window->context.glx.handle =
-<<<<<<< HEAD
                     createLegacyContextGLX(window, native, share);
-=======
-                    createLegacyContext(window, native, share);
->>>>>>> Started addition of Vulkan support on Linux
             }
         }
     }
     else
-<<<<<<< HEAD
     {
         window->context.glx.handle =
             createLegacyContextGLX(window, native, share);
@@ -674,114 +610,6 @@ GLFWbool _glfwCreateContextGLX(_GLFWwindow* window,
 }
 
 #undef setGLXattrib
-=======
-        window->context.glx.handle = createLegacyContext(window, native, share);
-
-    _glfwReleaseErrorHandlerX11();
-
-    if (!window->context.glx.handle)
-    {
-        _glfwInputErrorX11(GLFW_VERSION_UNAVAILABLE, "GLX: Failed to create context");
-        return GLFW_FALSE;
-    }
-
-    window->context.glx.window =
-        glXCreateWindow(_glfw.x11.display, native, window->x11.handle, NULL);
-    if (!window->context.glx.window)
-    {
-        _glfwInputError(GLFW_PLATFORM_ERROR, "GLX: Failed to create window");
-        return GLFW_FALSE;
-    }
-
-    return GLFW_TRUE;
-}
-
-#undef setGLXattrib
-
-// Destroy the OpenGL context
-//
-void _glfwDestroyContextGLX(_GLFWwindow* window)
-{
-    if (window->context.glx.window)
-    {
-        glXDestroyWindow(_glfw.x11.display, window->context.glx.window);
-        window->context.glx.window = None;
-    }
-
-    if (window->context.glx.handle)
-    {
-        glXDestroyContext(_glfw.x11.display, window->context.glx.handle);
-        window->context.glx.handle = NULL;
-    }
-}
-
-// Returns the Visual and depth of the chosen GLXFBConfig
-//
-GLFWbool _glfwChooseVisualGLX(const _GLFWctxconfig* ctxconfig,
-                              const _GLFWfbconfig* fbconfig,
-                              Visual** visual, int* depth)
-{
-    GLXFBConfig native;
-    XVisualInfo* result;
-
-    if (!chooseFBConfig(fbconfig, &native))
-    {
-        _glfwInputError(GLFW_FORMAT_UNAVAILABLE,
-                        "GLX: Failed to find a suitable GLXFBConfig");
-        return GLFW_FALSE;
-    }
-
-    result = glXGetVisualFromFBConfig(_glfw.x11.display, native);
-    if (!result)
-    {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "GLX: Failed to retrieve Visual for GLXFBConfig");
-        return GLFW_FALSE;
-    }
-
-    *visual = result->visual;
-    *depth = result->depth;
-
-    XFree(result);
-    return GLFW_TRUE;
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-//////                       GLFW platform API                      //////
-//////////////////////////////////////////////////////////////////////////
-
-void _glfwPlatformMakeContextCurrent(_GLFWwindow* window)
-{
-    if (window)
-    {
-        if (!glXMakeCurrent(_glfw.x11.display,
-                            window->context.glx.window,
-                            window->context.glx.handle))
-        {
-            _glfwInputError(GLFW_PLATFORM_ERROR,
-                            "GLX: Failed to make context current");
-            return;
-        }
-    }
-    else
-    {
-        if (!glXMakeCurrent(_glfw.x11.display, None, NULL))
-        {
-            _glfwInputError(GLFW_PLATFORM_ERROR,
-                            "GLX: Failed to clear current context");
-            return;
-        }
-    }
-
-    _glfwPlatformSetCurrentContext(window);
-}
-
-void _glfwPlatformSwapBuffers(_GLFWwindow* window)
-{
-    glXSwapBuffers(_glfw.x11.display, window->context.glx.window);
-}
->>>>>>> Started addition of Vulkan support on Linux
 
 // Returns the Visual and depth of the chosen GLXFBConfig
 //
@@ -794,25 +622,11 @@ GLFWbool _glfwChooseVisualGLX(const _GLFWctxconfig* ctxconfig,
 
     if (!chooseGLXFBConfig(fbconfig, &native))
     {
-<<<<<<< HEAD
         _glfwInputError(GLFW_FORMAT_UNAVAILABLE,
                         "GLX: Failed to find a suitable GLXFBConfig");
         return GLFW_FALSE;
-=======
-        _glfw.glx.SwapIntervalEXT(_glfw.x11.display,
-                                  window->context.glx.window,
-                                  interval);
-    }
-    else if (_glfw.glx.MESA_swap_control)
-        _glfw.glx.SwapIntervalMESA(interval);
-    else if (_glfw.glx.SGI_swap_control)
-    {
-        if (interval > 0)
-            _glfw.glx.SwapIntervalSGI(interval);
->>>>>>> Started addition of Vulkan support on Linux
     }
 
-<<<<<<< HEAD
     result = glXGetVisualFromFBConfig(_glfw.x11.display, native);
     if (!result)
     {
@@ -823,20 +637,6 @@ GLFWbool _glfwChooseVisualGLX(const _GLFWctxconfig* ctxconfig,
 
     *visual = result->visual;
     *depth = result->depth;
-=======
-int _glfwPlatformExtensionSupported(const char* extension)
-{
-    const char* extensions =
-        glXQueryExtensionsString(_glfw.x11.display, _glfw.x11.screen);
-    if (extensions)
-    {
-        if (_glfwStringInExtensionString(extension, extensions))
-            return GLFW_TRUE;
-    }
-
-    return GLFW_FALSE;
-}
->>>>>>> Started addition of Vulkan support on Linux
 
     XFree(result);
     return GLFW_TRUE;
@@ -852,11 +652,7 @@ GLFWAPI GLXContext glfwGetGLXContext(GLFWwindow* handle)
     _GLFWwindow* window = (_GLFWwindow*) handle;
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
 
-<<<<<<< HEAD
     if (window->context.client == GLFW_NO_API)
-=======
-    if (window->context.api == GLFW_NO_API)
->>>>>>> Started addition of Vulkan support on Linux
     {
         _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
         return NULL;
@@ -870,11 +666,7 @@ GLFWAPI GLXWindow glfwGetGLXWindow(GLFWwindow* handle)
     _GLFWwindow* window = (_GLFWwindow*) handle;
     _GLFW_REQUIRE_INIT_OR_RETURN(None);
 
-<<<<<<< HEAD
     if (window->context.client == GLFW_NO_API)
-=======
-    if (window->context.api == GLFW_NO_API)
->>>>>>> Started addition of Vulkan support on Linux
     {
         _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
         return None;

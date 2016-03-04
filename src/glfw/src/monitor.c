@@ -375,12 +375,8 @@ GLFWAPI const GLFWvidmode* glfwGetVideoModes(GLFWmonitor* handle, int* count)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
     assert(monitor != NULL);
-<<<<<<< HEAD
     assert(count != NULL);
-=======
->>>>>>> Started addition of Vulkan support on Linux
 
-    assert(count != NULL);
     *count = 0;
 
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
@@ -458,7 +454,6 @@ GLFWAPI void glfwSetGammaRamp(GLFWmonitor* handle, const GLFWgammaramp* ramp)
 {
     _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
     assert(monitor != NULL);
-<<<<<<< HEAD
     assert(ramp != NULL);
     assert(ramp->red != NULL);
     assert(ramp->green != NULL);
@@ -471,10 +466,6 @@ GLFWAPI void glfwSetGammaRamp(GLFWmonitor* handle, const GLFWgammaramp* ramp)
                         ramp->size);
         return;
     }
-=======
-
-    assert(ramp != NULL);
->>>>>>> Started addition of Vulkan support on Linux
 
     _GLFW_REQUIRE_INIT();
 

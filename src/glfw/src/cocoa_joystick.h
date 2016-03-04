@@ -32,21 +32,13 @@
 #include <IOKit/hid/IOHIDLib.h>
 #include <IOKit/hid/IOHIDKeys.h>
 
-<<<<<<< HEAD:src/glfw/src/cocoa_joystick.h
 #define _GLFW_PLATFORM_LIBRARY_JOYSTICK_STATE \
     _GLFWjoystickNS ns_js[GLFW_JOYSTICK_LAST + 1]
-=======
-#define _GLFW_PLATFORM_LIBRARY_JOYSTICK_STATE _GLFWjoystickNS ns_js
->>>>>>> Started addition of Vulkan support on Linux:src/glfw/src/cocoa_joystick.h
 
 
 // Cocoa-specific per-joystick data
 //
-<<<<<<< HEAD:src/glfw/src/cocoa_joystick.h
 typedef struct _GLFWjoystickNS
-=======
-typedef struct _GLFWjoydeviceNS
->>>>>>> Started addition of Vulkan support on Linux:src/glfw/src/cocoa_joystick.h
 {
     GLFWbool        present;
     char            name[256];
@@ -59,21 +51,8 @@ typedef struct _GLFWjoydeviceNS
 
     float*          axes;
     unsigned char*  buttons;
-<<<<<<< HEAD:src/glfw/src/cocoa_joystick.h
 } _GLFWjoystickNS;
 
-=======
-} _GLFWjoydeviceNS;
-
-// Cocoa-specific joystick API data
-//
-typedef struct _GLFWjoystickNS
-{
-    _GLFWjoydeviceNS devices[GLFW_JOYSTICK_LAST + 1];
-
-    IOHIDManagerRef managerRef;
-} _GLFWjoystickNS;
->>>>>>> Started addition of Vulkan support on Linux:src/glfw/src/cocoa_joystick.h
 
 void _glfwInitJoysticksNS(void);
 void _glfwTerminateJoysticksNS(void);

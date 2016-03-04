@@ -183,12 +183,6 @@ int _glfwPlatformInit(void)
     if (!_glfwInitThreadLocalStoragePOSIX())
         return GLFW_FALSE;
 
-<<<<<<< HEAD
-=======
-    if (!_glfwInitEGL())
-        return GLFW_FALSE;
-
->>>>>>> Started addition of Vulkan support on Linux
     if (!_glfwInitJoysticksLinux())
         return GLFW_FALSE;
 

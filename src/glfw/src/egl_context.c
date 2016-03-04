@@ -85,11 +85,7 @@ static int getEGLConfigAttrib(EGLConfig config, int attrib)
 
 // Return the EGLConfig most closely matching the specified hints
 //
-<<<<<<< HEAD
 static GLFWbool chooseEGLConfig(const _GLFWctxconfig* ctxconfig,
-=======
-static GLFWbool chooseFBConfigs(const _GLFWctxconfig* ctxconfig,
->>>>>>> Started addition of Vulkan support on Linux
                                 const _GLFWfbconfig* desired,
                                 EGLConfig* result)
 {
@@ -126,19 +122,11 @@ static GLFWbool chooseFBConfigs(const _GLFWctxconfig* ctxconfig,
 
 #if defined(_GLFW_X11)
         // Only consider EGLConfigs with associated Visuals
-<<<<<<< HEAD
         if (!getEGLConfigAttrib(n, EGL_NATIVE_VISUAL_ID))
             continue;
 #endif // _GLFW_X11
 
         if (ctxconfig->client == GLFW_OPENGL_ES_API)
-=======
-        if (!getConfigAttrib(n, EGL_NATIVE_VISUAL_ID))
-            continue;
-#endif // _GLFW_X11
-
-        if (ctxconfig->api == GLFW_OPENGL_ES_API)
->>>>>>> Started addition of Vulkan support on Linux
         {
             if (ctxconfig->major == 1)
             {
@@ -165,11 +153,7 @@ static GLFWbool chooseFBConfigs(const _GLFWctxconfig* ctxconfig,
         u->depthBits = getEGLConfigAttrib(n, EGL_DEPTH_SIZE);
         u->stencilBits = getEGLConfigAttrib(n, EGL_STENCIL_SIZE);
 
-<<<<<<< HEAD
         u->samples = getEGLConfigAttrib(n, EGL_SAMPLES);
-=======
-        u->samples = getConfigAttrib(n, EGL_SAMPLES);
->>>>>>> Started addition of Vulkan support on Linux
         u->doublebuffer = GLFW_TRUE;
 
         u->handle = (uintptr_t) n;
@@ -183,7 +167,6 @@ static GLFWbool chooseFBConfigs(const _GLFWctxconfig* ctxconfig,
     free(nativeConfigs);
     free(usableConfigs);
 
-<<<<<<< HEAD
     return closest != NULL;
 }
 
@@ -289,9 +272,6 @@ static void destroyContextEGL(_GLFWwindow* window)
         eglDestroyContext(_glfw.egl.display, window->context.egl.handle);
         window->context.egl.handle = EGL_NO_CONTEXT;
     }
-=======
-    return closest ? GLFW_TRUE : GLFW_FALSE;
->>>>>>> Started addition of Vulkan support on Linux
 }
 
 
@@ -316,7 +296,6 @@ GLFWbool _glfwInitEGL(void)
 #endif
         NULL
     };
-<<<<<<< HEAD
 
     if (_glfw.egl.handle)
         return GLFW_TRUE;
@@ -336,22 +315,6 @@ GLFWbool _glfwInitEGL(void)
 
     _glfw.egl.prefix = (strncmp(sonames[i], "lib", 3) == 0);
 
-=======
-
-    for (i = 0;  sonames[i];  i++)
-    {
-        _glfw.egl.handle = _glfw_dlopen(sonames[i]);
-        if (_glfw.egl.handle)
-            break;
-    }
-
-    if (!_glfw.egl.handle)
-    {
-        _glfwInputError(GLFW_API_UNAVAILABLE, "EGL: Failed to load EGL");
-        return GLFW_FALSE;
-    }
-
->>>>>>> Started addition of Vulkan support on Linux
     _glfw.egl.GetConfigAttrib = (PFNEGLGETCONFIGATTRIBPROC)
         _glfw_dlsym(_glfw.egl.handle, "eglGetConfigAttrib");
     _glfw.egl.GetConfigs = (PFNEGLGETCONFIGSPROC)
@@ -385,7 +348,6 @@ GLFWbool _glfwInitEGL(void)
     _glfw.egl.GetProcAddress = (PFNEGLGETPROCADDRESSPROC)
         _glfw_dlsym(_glfw.egl.handle, "eglGetProcAddress");
 
-<<<<<<< HEAD
     if (!_glfw.egl.GetConfigAttrib ||
         !_glfw.egl.GetConfigs ||
         !_glfw.egl.GetDisplay ||
@@ -410,20 +372,14 @@ GLFWbool _glfwInitEGL(void)
         return GLFW_FALSE;
     }
 
-=======
->>>>>>> Started addition of Vulkan support on Linux
     _glfw.egl.display = eglGetDisplay(_GLFW_EGL_NATIVE_DISPLAY);
     if (_glfw.egl.display == EGL_NO_DISPLAY)
     {
         _glfwInputError(GLFW_API_UNAVAILABLE,
                         "EGL: Failed to get EGL display: %s",
-<<<<<<< HEAD
                         getEGLErrorString(eglGetError()));
 
         _glfwTerminateEGL();
-=======
-                        getErrorString(eglGetError()));
->>>>>>> Started addition of Vulkan support on Linux
         return GLFW_FALSE;
     }
 
@@ -431,30 +387,18 @@ GLFWbool _glfwInitEGL(void)
     {
         _glfwInputError(GLFW_API_UNAVAILABLE,
                         "EGL: Failed to initialize EGL: %s",
-<<<<<<< HEAD
                         getEGLErrorString(eglGetError()));
 
         _glfwTerminateEGL();
-=======
-                        getErrorString(eglGetError()));
->>>>>>> Started addition of Vulkan support on Linux
         return GLFW_FALSE;
     }
 
     _glfw.egl.KHR_create_context =
-<<<<<<< HEAD
         extensionSupportedEGL("EGL_KHR_create_context");
     _glfw.egl.KHR_create_context_no_error =
         extensionSupportedEGL("EGL_KHR_create_context_no_error");
     _glfw.egl.KHR_gl_colorspace =
         extensionSupportedEGL("EGL_KHR_gl_colorspace");
-=======
-        _glfwPlatformExtensionSupported("EGL_KHR_create_context");
-    _glfw.egl.KHR_create_context_no_error =
-        _glfwPlatformExtensionSupported("EGL_KHR_create_context_no_error");
-    _glfw.egl.KHR_gl_colorspace =
-        _glfwPlatformExtensionSupported("EGL_KHR_gl_colorspace");
->>>>>>> Started addition of Vulkan support on Linux
 
     return GLFW_TRUE;
 }
@@ -463,7 +407,6 @@ GLFWbool _glfwInitEGL(void)
 //
 void _glfwTerminateEGL(void)
 {
-<<<<<<< HEAD
     if (_glfw.egl.display)
     {
         eglTerminate(_glfw.egl.display);
@@ -472,11 +415,6 @@ void _glfwTerminateEGL(void)
 
     if (_glfw.egl.handle)
     {
-=======
-    if (_glfw.egl.handle)
-    {
-        eglTerminate(_glfw.egl.display);
->>>>>>> Started addition of Vulkan support on Linux
         _glfw_dlclose(_glfw.egl.handle);
         _glfw.egl.handle = NULL;
     }
@@ -499,7 +437,6 @@ GLFWbool _glfwCreateContextEGL(_GLFWwindow* window,
     EGLConfig config;
     EGLContext share = NULL;
 
-<<<<<<< HEAD
     if (!_glfw.egl.display)
     {
         _glfwInputError(GLFW_API_UNAVAILABLE, "EGL: API not available");
@@ -511,13 +448,6 @@ GLFWbool _glfwCreateContextEGL(_GLFWwindow* window,
 
     if (!chooseEGLConfig(ctxconfig, fbconfig, &config))
     {
-=======
-    if (ctxconfig->share)
-        share = ctxconfig->share->context.egl.handle;
-
-    if (!chooseFBConfigs(ctxconfig, fbconfig, &config))
-    {
->>>>>>> Started addition of Vulkan support on Linux
         _glfwInputError(GLFW_FORMAT_UNAVAILABLE,
                         "EGL: Failed to find a suitable EGLConfig");
         return GLFW_FALSE;
@@ -529,11 +459,7 @@ GLFWbool _glfwCreateContextEGL(_GLFWwindow* window,
         {
             _glfwInputError(GLFW_API_UNAVAILABLE,
                             "EGL: Failed to bind OpenGL ES: %s",
-<<<<<<< HEAD
                             getEGLErrorString(eglGetError()));
-=======
-                            getErrorString(eglGetError()));
->>>>>>> Started addition of Vulkan support on Linux
             return GLFW_FALSE;
         }
     }
@@ -543,11 +469,7 @@ GLFWbool _glfwCreateContextEGL(_GLFWwindow* window,
         {
             _glfwInputError(GLFW_API_UNAVAILABLE,
                             "EGL: Failed to bind OpenGL: %s",
-<<<<<<< HEAD
                             getEGLErrorString(eglGetError()));
-=======
-                            getErrorString(eglGetError()));
->>>>>>> Started addition of Vulkan support on Linux
             return GLFW_FALSE;
         }
     }
@@ -626,7 +548,6 @@ GLFWbool _glfwCreateContextEGL(_GLFWwindow* window,
     {
         _glfwInputError(GLFW_VERSION_UNAVAILABLE,
                         "EGL: Failed to create context: %s",
-<<<<<<< HEAD
                         getEGLErrorString(eglGetError()));
         return GLFW_FALSE;
     }
@@ -634,14 +555,6 @@ GLFWbool _glfwCreateContextEGL(_GLFWwindow* window,
     // Set up attributes for surface creation
     {
         int index = 0;
-=======
-                        getErrorString(eglGetError()));
-        return GLFW_FALSE;
-    }
-
-    // Set up attributes for surface creation
-    {
-        int index = 0;
 
         if (fbconfig->sRGB)
         {
@@ -651,101 +564,6 @@ GLFWbool _glfwCreateContextEGL(_GLFWwindow* window,
             }
         }
 
-        setEGLattrib(EGL_NONE, EGL_NONE);
-    }
-
-    window->context.egl.surface =
-        eglCreateWindowSurface(_glfw.egl.display,
-                               config,
-                               _GLFW_EGL_NATIVE_WINDOW,
-                               attribs);
-    if (window->context.egl.surface == EGL_NO_SURFACE)
-    {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "EGL: Failed to create window surface: %s",
-                        getErrorString(eglGetError()));
-        return GLFW_FALSE;
-    }
-
-    window->context.egl.config = config;
-
-    // Load the appropriate client library
-    {
-        int i;
-        const char** sonames;
-        const char* es1sonames[] =
-        {
-#if defined(_GLFW_WIN32)
-            "GLESv1_CM.dll",
-            "libGLES_CM.dll",
-#elif defined(_GLFW_COCOA)
-            "libGLESv1_CM.dylib",
-#else
-            "libGLESv1_CM.so.1",
-            "libGLES_CM.so.1",
-#endif
-            NULL
-        };
-        const char* es2sonames[] =
-        {
-#if defined(_GLFW_WIN32)
-            "GLESv2.dll",
-            "libGLESv2.dll",
-#elif defined(_GLFW_COCOA)
-            "libGLESv2.dylib",
-#else
-            "libGLESv2.so.2",
-#endif
-            NULL
-        };
-        const char* glsonames[] =
-        {
-#if defined(_GLFW_WIN32)
-#elif defined(_GLFW_COCOA)
-#else
-            "libGL.so.1",
-#endif
-            NULL
-        };
-
-        if (ctxconfig->api == GLFW_OPENGL_ES_API)
-        {
-            if (ctxconfig->major == 1)
-                sonames = es1sonames;
-            else
-                sonames = es2sonames;
-        }
-        else
-            sonames = glsonames;
-
-        for (i = 0;  sonames[i];  i++)
-        {
-            window->context.egl.client = _glfw_dlopen(sonames[i]);
-            if (window->context.egl.client)
-                break;
-        }
-
-        if (!window->context.egl.client)
-        {
-            _glfwInputError(GLFW_API_UNAVAILABLE,
-                            "EGL: Failed to load client library");
-            return GLFW_FALSE;
-        }
-    }
-
-    return GLFW_TRUE;
-}
->>>>>>> Started addition of Vulkan support on Linux
-
-        if (fbconfig->sRGB)
-        {
-            if (_glfw.egl.KHR_gl_colorspace)
-            {
-                setEGLattrib(EGL_GL_COLORSPACE_KHR, EGL_GL_COLORSPACE_SRGB_KHR);
-            }
-        }
-
-<<<<<<< HEAD
         setEGLattrib(EGL_NONE, EGL_NONE);
     }
 
@@ -802,80 +620,6 @@ GLFWbool _glfwCreateContextEGL(_GLFWwindow* window,
 #endif
             NULL
         };
-=======
-// Destroy the OpenGL context
-//
-void _glfwDestroyContextEGL(_GLFWwindow* window)
-{
-#if defined(_GLFW_X11)
-    // NOTE: Do not unload libGL.so.1 while the X11 display is still open,
-    //       as it will make XCloseDisplay segfault
-    if (window->context.api != GLFW_OPENGL_API)
-#endif // _GLFW_X11
-    {
-        if (window->context.egl.client)
-        {
-            _glfw_dlclose(window->context.egl.client);
-            window->context.egl.client = NULL;
-        }
-    }
-
-    if (window->context.egl.surface)
-    {
-        eglDestroySurface(_glfw.egl.display, window->context.egl.surface);
-        window->context.egl.surface = EGL_NO_SURFACE;
-    }
-
-    if (window->context.egl.handle)
-    {
-        eglDestroyContext(_glfw.egl.display, window->context.egl.handle);
-        window->context.egl.handle = EGL_NO_CONTEXT;
-    }
-}
-
-// Returns the Visual and depth of the chosen EGLConfig
-//
-#if defined(_GLFW_X11)
-GLFWbool _glfwChooseVisualEGL(const _GLFWctxconfig* ctxconfig,
-                              const _GLFWfbconfig* fbconfig,
-                              Visual** visual, int* depth)
-{
-    XVisualInfo* result;
-    XVisualInfo desired;
-    EGLConfig native;
-    EGLint visualID = 0, count = 0;
-    const long vimask = VisualScreenMask | VisualIDMask;
-
-    if (!chooseFBConfigs(ctxconfig, fbconfig, &native))
-    {
-        _glfwInputError(GLFW_FORMAT_UNAVAILABLE,
-                        "EGL: Failed to find a suitable EGLConfig");
-        return GLFW_FALSE;
-    }
-
-    eglGetConfigAttrib(_glfw.egl.display, native,
-                       EGL_NATIVE_VISUAL_ID, &visualID);
-
-    desired.screen = _glfw.x11.screen;
-    desired.visualid = visualID;
-
-    result = XGetVisualInfo(_glfw.x11.display, vimask, &desired, &count);
-    if (!result)
-    {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "EGL: Failed to retrieve Visual for EGLConfig");
-        return GLFW_FALSE;
-    }
-
-    *visual = result->visual;
-    *depth = result->depth;
-
-    XFree(result);
-    return GLFW_TRUE;
-}
-#endif // _GLFW_X11
-
->>>>>>> Started addition of Vulkan support on Linux
 
         if (ctxconfig->client == GLFW_OPENGL_ES_API)
         {
@@ -887,7 +631,6 @@ GLFWbool _glfwChooseVisualEGL(const _GLFWctxconfig* ctxconfig,
         else
             sonames = glsonames;
 
-<<<<<<< HEAD
         for (i = 0;  sonames[i];  i++)
         {
             // HACK: Match presence of lib prefix to increase chance of finding
@@ -916,50 +659,6 @@ GLFWbool _glfwChooseVisualEGL(const _GLFWctxconfig* ctxconfig,
     window->context.destroy = destroyContextEGL;
 
     return GLFW_TRUE;
-=======
-void _glfwPlatformMakeContextCurrent(_GLFWwindow* window)
-{
-    if (window)
-    {
-        if (!eglMakeCurrent(_glfw.egl.display,
-                            window->context.egl.surface,
-                            window->context.egl.surface,
-                            window->context.egl.handle))
-        {
-            _glfwInputError(GLFW_PLATFORM_ERROR,
-                            "EGL: Failed to make context current: %s",
-                            getErrorString(eglGetError()));
-            return;
-        }
-    }
-    else
-    {
-        if (!eglMakeCurrent(_glfw.egl.display,
-                            EGL_NO_SURFACE,
-                            EGL_NO_SURFACE,
-                            EGL_NO_CONTEXT))
-        {
-            _glfwInputError(GLFW_PLATFORM_ERROR,
-                            "EGL: Failed to clear current context: %s",
-                            getErrorString(eglGetError()));
-            return;
-        }
-    }
-
-    _glfwPlatformSetCurrentContext(window);
-}
-
-void _glfwPlatformSwapBuffers(_GLFWwindow* window)
-{
-    if (window != _glfwPlatformGetCurrentContext())
-    {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "EGL: The context must be current on the calling thread when swapping buffers");
-        return;
-    }
-
-    eglSwapBuffers(_glfw.egl.display, window->context.egl.surface);
->>>>>>> Started addition of Vulkan support on Linux
 }
 
 #undef setEGLattrib
@@ -979,7 +678,6 @@ GLFWbool _glfwChooseVisualEGL(const _GLFWctxconfig* ctxconfig,
 
     if (!chooseEGLConfig(ctxconfig, fbconfig, &native))
     {
-<<<<<<< HEAD
         _glfwInputError(GLFW_FORMAT_UNAVAILABLE,
                         "EGL: Failed to find a suitable EGLConfig");
         return GLFW_FALSE;
@@ -1004,28 +702,6 @@ GLFWbool _glfwChooseVisualEGL(const _GLFWctxconfig* ctxconfig,
 
     XFree(result);
     return GLFW_TRUE;
-=======
-        if (_glfwStringInExtensionString(extension, extensions))
-            return GLFW_TRUE;
-    }
-
-    return GLFW_FALSE;
-}
-
-GLFWglproc _glfwPlatformGetProcAddress(const char* procname)
-{
-    _GLFWwindow* window = _glfwPlatformGetCurrentContext();
-
-    if (window->context.egl.client)
-    {
-        GLFWglproc proc = (GLFWglproc) _glfw_dlsym(window->context.egl.client,
-                                                   procname);
-        if (proc)
-            return proc;
-    }
-
-    return eglGetProcAddress(procname);
->>>>>>> Started addition of Vulkan support on Linux
 }
 #endif // _GLFW_X11
 
@@ -1045,11 +721,7 @@ GLFWAPI EGLContext glfwGetEGLContext(GLFWwindow* handle)
     _GLFWwindow* window = (_GLFWwindow*) handle;
     _GLFW_REQUIRE_INIT_OR_RETURN(EGL_NO_CONTEXT);
 
-<<<<<<< HEAD
     if (window->context.client == GLFW_NO_API)
-=======
-    if (window->context.api == GLFW_NO_API)
->>>>>>> Started addition of Vulkan support on Linux
     {
         _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
         return EGL_NO_CONTEXT;
@@ -1063,11 +735,7 @@ GLFWAPI EGLSurface glfwGetEGLSurface(GLFWwindow* handle)
     _GLFWwindow* window = (_GLFWwindow*) handle;
     _GLFW_REQUIRE_INIT_OR_RETURN(EGL_NO_SURFACE);
 
-<<<<<<< HEAD
     if (window->context.client == GLFW_NO_API)
-=======
-    if (window->context.api == GLFW_NO_API)
->>>>>>> Started addition of Vulkan support on Linux
     {
         _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
         return EGL_NO_SURFACE;

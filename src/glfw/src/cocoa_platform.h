@@ -41,14 +41,7 @@ typedef void* id;
 
 #include "posix_tls.h"
 #include "cocoa_joystick.h"
-<<<<<<< HEAD
 #include "nsgl_context.h"
-=======
->>>>>>> Started addition of Vulkan support on Linux
-
-#define _glfw_dlopen(name) dlopen(name, RTLD_LAZY | RTLD_LOCAL)
-#define _glfw_dlclose(handle) dlclose(handle)
-#define _glfw_dlsym(handle, name) dlsym(handle, name)
 
 #define _glfw_dlopen(name) dlopen(name, RTLD_LAZY | RTLD_LOCAL)
 #define _glfw_dlclose(handle) dlclose(handle)
@@ -98,19 +91,14 @@ typedef struct _GLFWlibraryNS
     id                  autoreleasePool;
     id                  cursor;
     TISInputSourceRef   inputSource;
-<<<<<<< HEAD
     IOHIDManagerRef     hidManager;
     id                  unicodeData;
     id                  listener;
-=======
-    id                  unicodeData;
->>>>>>> Started addition of Vulkan support on Linux
 
     char                keyName[64];
     short int           publicKeys[256];
     short int           nativeKeys[GLFW_KEY_LAST + 1];
     char*               clipboardString;
-<<<<<<< HEAD
     // Where to place the cursor when re-enabled
     double              restoreCursorPosX, restoreCursorPosY;
     // The window whose disabled cursor mode is active
@@ -124,8 +112,6 @@ typedef struct _GLFWlibraryNS
         CFStringRef     kPropertyUnicodeKeyLayoutData;
         CFStringRef     kNotifySelectedKeyboardInputSourceChanged;
     } tis;
-=======
->>>>>>> Started addition of Vulkan support on Linux
 
 } _GLFWlibraryNS;
 

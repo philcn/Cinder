@@ -41,20 +41,12 @@ void _glfwInitTimerWin32(void)
     if (QueryPerformanceFrequency((LARGE_INTEGER*) &frequency))
     {
         _glfw.win32_time.hasPC = GLFW_TRUE;
-<<<<<<< HEAD
         _glfw.win32_time.frequency = frequency;
-=======
-        _glfw.win32_time.resolution = 1.0 / (double) frequency;
->>>>>>> Started addition of Vulkan support on Linux
     }
     else
     {
         _glfw.win32_time.hasPC = GLFW_FALSE;
-<<<<<<< HEAD
         _glfw.win32_time.frequency = 1000;
-=======
-        _glfw.win32_time.resolution = 0.001; // winmm resolution is 1 ms
->>>>>>> Started addition of Vulkan support on Linux
     }
 }
 

@@ -150,7 +150,6 @@ GLFWAPI GLFWwindow* glfwCreateWindow(int width, int height,
     ctxconfig.share   = (_GLFWwindow*) share;
 
     if (ctxconfig.share)
-<<<<<<< HEAD
     {
         if (ctxconfig.client == GLFW_NO_API ||
             ctxconfig.share->context.client == GLFW_NO_API)
@@ -158,21 +157,6 @@ GLFWAPI GLFWwindow* glfwCreateWindow(int width, int height,
             _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
             return NULL;
         }
-=======
-    {
-        if (ctxconfig.share->context.api == GLFW_NO_API)
-        {
-            _glfwInputError(GLFW_NO_WINDOW_CONTEXT, NULL);
-            return NULL;
-        }
-    }
-
-    if (wndconfig.monitor)
-    {
-        wndconfig.resizable = GLFW_TRUE;
-        wndconfig.visible   = GLFW_TRUE;
-        wndconfig.focused   = GLFW_TRUE;
->>>>>>> Started addition of Vulkan support on Linux
     }
 
     if (!_glfwIsValidContextConfig(&ctxconfig))
@@ -213,42 +197,12 @@ GLFWAPI GLFWwindow* glfwCreateWindow(int width, int height,
     {
         glfwMakeContextCurrent((GLFWwindow*) previous);
         glfwDestroyWindow((GLFWwindow*) window);
-<<<<<<< HEAD
         return NULL;
     }
 
     if (ctxconfig.client != GLFW_NO_API)
     {
         window->context.makeCurrent(window);
-=======
-        _glfwPlatformMakeContextCurrent(previous);
-        return NULL;
-    }
-
-    if (ctxconfig.api != GLFW_NO_API)
-    {
-        _glfwPlatformMakeContextCurrent(window);
-
-        // Retrieve the actual (as opposed to requested) context attributes
-        if (!_glfwRefreshContextAttribs(&ctxconfig))
-        {
-            glfwDestroyWindow((GLFWwindow*) window);
-            _glfwPlatformMakeContextCurrent(previous);
-            return NULL;
-        }
-
-        // Verify the context against the requested parameters
-        if (!_glfwIsValidContext(&ctxconfig))
-        {
-            glfwDestroyWindow((GLFWwindow*) window);
-            _glfwPlatformMakeContextCurrent(previous);
-            return NULL;
-        }
-
-        // Restore the previously current context (or NULL)
-        _glfwPlatformMakeContextCurrent(previous);
-    }
->>>>>>> Started addition of Vulkan support on Linux
 
         // Retrieve the actual (as opposed to requested) context attributes
         if (!_glfwRefreshContextAttribs(&ctxconfig))
@@ -375,24 +329,16 @@ GLFWAPI void glfwWindowHint(int hint, int value)
             _glfw.hints.window.floating = value ? GLFW_TRUE : GLFW_FALSE;
             break;
         case GLFW_MAXIMIZED:
-<<<<<<< HEAD
             _glfw.hints.window.maximized = value ? GLFW_TRUE : GLFW_FALSE;
-=======
-            _glfw.hints.window.maximized = hint ? GLFW_TRUE : GLFW_FALSE;
->>>>>>> Started addition of Vulkan support on Linux
             break;
         case GLFW_VISIBLE:
             _glfw.hints.window.visible = value ? GLFW_TRUE : GLFW_FALSE;
             break;
         case GLFW_CLIENT_API:
-<<<<<<< HEAD
             _glfw.hints.context.client = value;
             break;
         case GLFW_CONTEXT_CREATION_API:
             _glfw.hints.context.source = value;
-=======
-            _glfw.hints.context.api = value;
->>>>>>> Started addition of Vulkan support on Linux
             break;
         case GLFW_CONTEXT_VERSION_MAJOR:
             _glfw.hints.context.major = value;
@@ -627,50 +573,10 @@ GLFWAPI void glfwSetWindowAspectRatio(GLFWwindow* handle, int numer, int denom)
     _glfwPlatformSetWindowAspectRatio(window, numer, denom);
 }
 
-GLFWAPI void glfwSetWindowSizeLimits(GLFWwindow* handle,
-                                     int minwidth, int minheight,
-                                     int maxwidth, int maxheight)
-{
-    _GLFWwindow* window = (_GLFWwindow*) handle;
-    assert(window != NULL);
-
-    _GLFW_REQUIRE_INIT();
-
-    if (window->monitor || !window->resizable)
-        return;
-
-    _glfwPlatformSetWindowSizeLimits(window,
-                                     minwidth, minheight,
-                                     maxwidth, maxheight);
-}
-
-GLFWAPI void glfwSetWindowAspectRatio(GLFWwindow* handle, int numer, int denom)
-{
-    _GLFWwindow* window = (_GLFWwindow*) handle;
-    assert(window != NULL);
-
-    _GLFW_REQUIRE_INIT();
-
-    if (window->monitor || !window->resizable)
-        return;
-
-    if (!denom)
-    {
-        _glfwInputError(GLFW_INVALID_VALUE, "Denominator cannot be zero");
-        return;
-    }
-
-    _glfwPlatformSetWindowAspectRatio(window, numer, denom);
-}
-
 GLFWAPI void glfwGetFramebufferSize(GLFWwindow* handle, int* width, int* height)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
-<<<<<<< HEAD
     assert(window != NULL);
-=======
-    assert(window);
->>>>>>> Started addition of Vulkan support on Linux
 
     if (width)
         *width = 0;
@@ -722,11 +628,8 @@ GLFWAPI void glfwRestoreWindow(GLFWwindow* handle)
 GLFWAPI void glfwMaximizeWindow(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
-<<<<<<< HEAD
     assert(window != NULL);
 
-=======
->>>>>>> Started addition of Vulkan support on Linux
     _GLFW_REQUIRE_INIT();
     _glfwPlatformMaximizeWindow(window);
 }
