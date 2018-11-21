@@ -136,9 +136,10 @@ class RendererVk : public Renderer {
 #if defined( CINDER_ANDROID )
 #elif defined( CINDER_LINUX )
 	virtual void		setup( void* window, RendererRef sharedRenderer ) override;	
-#elif defined( CINDER_MSW )
-	virtual HWND		getHwnd() override { return mWnd; }
-	virtual void		setup( HWND wnd, HDC dc, RendererRef sharedRenderer ) override;
+#elif defined( CINDER_MSW_DESKTOP )
+	virtual HWND		getHwnd() const override { return mWnd; }
+	virtual HDC			getDc() const override { return mDc; }
+	virtual void		setup( WindowImplMsw *windowImpl, RendererRef sharedRenderer ) override;
 	virtual void		kill() override;
 #endif
 
@@ -161,8 +162,9 @@ class RendererVk : public Renderer {
 #if defined( CINDER_ANDROID )
 #elif defined( CINDER_LINUX )
 	GLFWwindow			*mWindow = nullptr;  	
-#elif defined( CINDER_MSW )
+#elif defined( CINDER_MSW_DESKTOP )
 	HWND				mWnd = nullptr;
+	HDC					mDc = nullptr;
 #endif
 	
 	RendererVk::Options	mOptions;

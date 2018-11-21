@@ -57,6 +57,10 @@
 	#include "glfw/glfw3.h" 
 #endif
 
+#if defined( CINDER_MSW_DESKTOP )
+	#include "cinder/app/msw/AppImplMsw.h"
+#endif
+
 #include <boost/algorithm/string.hpp>
 
 namespace cinder { namespace app {
@@ -151,7 +155,7 @@ RendererVk::RendererVk( const RendererVk &renderer )
 #if defined( CINDER_ANDROID )
 #elif defined( CINDER_LINUX )
 	mWindow = renderer.mWindow;
-#elif defined( CINDER_MSW )
+#elif defined( CINDER_MSW_DESKTOP )
 	mWnd = renderer.mWnd;
 #endif
 }
@@ -246,12 +250,13 @@ void RendererVk::setup( void* window, RendererRef sharedRenderer )
 	platformWindow.window = mWindow;
 	setupVulkan( windowSize, platformWindow );	
 }
-#elif defined( CINDER_MSW )
-void RendererVk::setup( HWND wnd, HDC dc, RendererRef sharedRenderer )
+#elif defined( CINDER_MSW_DESKTOP )
+void RendererVk::setup( WindowImplMsw *windowImpl, RendererRef sharedRenderer )
 {
 	::HINSTANCE hInst = ::GetModuleHandle( nullptr );
 
-	mWnd = wnd;
+	mWnd = windowImpl->getHwnd();
+	mDc = windowImpl->getDc();
 
 	// Get window dimension
 	::RECT clientRect;
